@@ -47,3 +47,4 @@ npm run dev
 | Database | MongoDB |
 | Auth | JWT + bcrypt (một cấp admin) |
 | Triển khai | Docker, Coolify, GitHub Actions (CI/CD) |
+
