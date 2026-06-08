@@ -1,9 +1,15 @@
-# Dependencies
+# ── Monorepo-wide ignores (apply to frontend/ and backend/) ──
+
+# Dependencies (matches node_modules at any depth)
 node_modules/
 
 # Build output
 dist/
 dist-ssr/
+
+# Uploaded media written by the backend (multer) — never commit binaries
+backend/uploads/*
+!backend/uploads/.gitkeep
 
 # Logs
 *.log
@@ -11,14 +17,14 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Env files (keep .env.example tracked)
+.env
+.env.*
+!.env.example
+
 # Editor / OS
 .vscode/*
 !.vscode/extensions.json
 .idea/
 .DS_Store
 *.local
-
-# Env
-.env
-.env.*
-!.env.example

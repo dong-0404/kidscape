@@ -1,0 +1,62 @@
+# KidScape production stack — deployed by Coolify as a "Docker Compose" resource.
+# Environment variables are provided by Coolify's UI (see deploy/env.production.example).
+# Coolify's built-in Traefik proxy handles the public domain + Let's Encrypt SSL.
+
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:-kidscape}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ['CMD', 'mongosh', '--quiet', '--eval', "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      MONGODB_URI: mongodb://${MONGO_USER:-kidscape}:${MONGO_PASSWORD}@mongo:27017/kidscape?authSource=admin
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-1d}
+      BCRYPT_SALT_ROUNDS: ${BCRYPT_SALT_ROUNDS:-12}
+      CORS_ORIGINS: ${APP_URL}
+      # Coolify Traefik + frontend nginx = 2 proxy hops in front of the API.
+      TRUST_PROXY: 2
+      RATE_LIMIT_LOGIN_MAX: ${RATE_LIMIT_LOGIN_MAX:-5}
+      RATE_LIMIT_WINDOW_MIN: ${RATE_LIMIT_WINDOW_MIN:-15}
+      SEED_ADMIN_NAME: ${SEED_ADMIN_NAME:-Admin KidScape}
+      SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL}
+      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD}
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # Relative API base -> same origin; nginx proxies /api to the backend service.
+        VITE_API_BASE_URL: /api
+    restart: unless-stopped
+    # The only public service. Set its domain in Coolify (frontend → Domains tab);
+    # Traefik routes here and issues Let's Encrypt SSL once DNS points to the server.
+    expose:
+      - '80'
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  mongo-data:
