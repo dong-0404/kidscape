@@ -6,6 +6,8 @@ import morgan from 'morgan'
 import mongoSanitize from 'express-mongo-sanitize'
 import { config } from './config/env.js'
 import routes from './routes/index.js'
+// Importing the upload middleware ensures the uploads dir is created at boot.
+import './middleware/upload.js'
 import { apiLimiter } from './middleware/rateLimiter.js'
 import notFound from './middleware/notFound.js'
 import errorHandler from './middleware/errorHandler.js'
@@ -38,6 +40,17 @@ export function createApp() {
   app.use(express.urlencoded({ extended: true, limit: '1mb' }))
   app.use(mongoSanitize())
   app.use(morgan(config.isProd ? 'combined' : 'dev'))
+
+  // Uploaded product images — served (and cached) before the rate-limited API
+  // router so <img src="/api/uploads/…"> works same-origin via the nginx proxy.
+  app.use(
+    '/api/uploads',
+    express.static(config.uploads.dir, {
+      maxAge: '7d',
+      fallthrough: false, // missing file → 404 instead of falling into the API 404
+      index: false,
+    })
+  )
 
   // API (rate-limited).
   app.use('/api', apiLimiter, routes)

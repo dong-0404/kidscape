@@ -22,6 +22,10 @@ export function errorHandler(err, req, res, next) {
   } else if (err.name === 'JsonWebTokenError' || err.name === 'TokenExpiredError') {
     statusCode = 401
     message = 'Token không hợp lệ hoặc đã hết hạn'
+  } else if (err.name === 'MulterError') {
+    statusCode = 400
+    message =
+      err.code === 'LIMIT_FILE_SIZE' ? 'Ảnh quá lớn so với giới hạn cho phép.' : 'Tải ảnh lên thất bại.'
   }
 
   if (statusCode >= 500) console.error(err)

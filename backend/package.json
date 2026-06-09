@@ -8,7 +8,7 @@
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
     "seed": "node seed/seed.js",
-    "test": "node test/auth.e2e.mjs && node test/chat.e2e.mjs"
+    "test": "node test/auth.e2e.mjs && node test/chat.e2e.mjs && node test/products.e2e.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.8.0",
@@ -23,7 +23,8 @@
     "helmet": "^7.2.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.9.5",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"

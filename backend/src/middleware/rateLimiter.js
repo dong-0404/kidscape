@@ -30,4 +30,13 @@ export const chatLimiter = rateLimit({
   message: jsonMessage('Bạn đang hỏi hơi nhanh đó! Chờ một chút rồi hỏi tiếp nhé.'),
 })
 
-export default { apiLimiter, loginLimiter, chatLimiter }
+// Limiter for the public newsletter subscribe endpoint (spam protection).
+export const subscribeLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: jsonMessage('Bạn thao tác hơi nhanh, vui lòng thử lại sau ít phút.'),
+})
+
+export default { apiLimiter, loginLimiter, chatLimiter, subscribeLimiter }

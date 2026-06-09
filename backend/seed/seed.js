@@ -3,6 +3,7 @@ import { connectDB, disconnectDB } from '../src/config/db.js'
 import Admin from '../src/models/Admin.js'
 import KnowledgeBase from '../src/models/KnowledgeBase.js'
 import ChatbotSuggestion from '../src/models/ChatbotSuggestion.js'
+import Product from '../src/models/Product.js'
 
 const EXAMPLE_PASSWORD = 'ChangeMe123!'
 
@@ -131,11 +132,67 @@ async function seedChatbot() {
   }
 }
 
+// Initial product catalogue (1 real flagship + 2 upcoming teasers).
+const PRODUCT_SEED = [
+  {
+    slug: 'nhung-nguoi-ban-sach-do',
+    name: 'Những Người Bạn Sách Đỏ',
+    tag: 'Bộ sách tương tác',
+    desc: 'Bộ sách đa giác quan với hình ảnh sống động, âm thanh vui nhộn và các chi tiết chạm — kể những câu chuyện về tình bạn cho bé 3-6 tuổi.',
+    longDesc:
+      'Những Người Bạn Sách Đỏ là bộ sách tương tác đa giác quan của KidScape, nơi mỗi trang sách là một thế giới để bé chạm vào, lắng nghe và khám phá. Hình ảnh sống động cùng âm thanh vui nhộn và các chi tiết chạm được thiết kế tỉ mỉ giúp bé vừa nghe kể chuyện, vừa tự tay trải nghiệm. Qua những câu chuyện ấm áp về tình bạn, bé phát triển ngôn ngữ, cảm xúc và các giác quan một cách tự nhiên — học mà như đang chơi.',
+    color: '#FF6B6B',
+    emoji: '📕',
+    ageRange: '3 – 6 tuổi',
+    highlights: [
+      { icon: '👀', title: 'Hình ảnh sống động', desc: 'Màu sắc tươi vui, thân thiện với trẻ nhỏ.' },
+      { icon: '🔊', title: 'Âm thanh vui nhộn', desc: 'Tiếng động và giai điệu khơi gợi thính giác.' },
+      { icon: '✋', title: 'Chi tiết chạm đa giác quan', desc: 'Nhiều chất liệu cho bé sờ và cảm nhận.' },
+      { icon: '❤️', title: 'Câu chuyện về tình bạn', desc: 'Nuôi dưỡng cảm xúc và sự đồng cảm.' },
+    ],
+    develops: ['Ngôn ngữ', 'Cảm xúc', 'Giác quan'],
+    status: 'available',
+    order: 1,
+  },
+  {
+    slug: 'hop-kham-pha-sac-mau',
+    name: 'Hộp Khám Phá Sắc Màu',
+    tag: 'Đồ chơi cảm giác',
+    desc: 'Khối ghép nhiều chất liệu giúp bé nhận biết màu sắc, hình khối và rèn luyện vận động tinh.',
+    color: '#4ECDC4',
+    emoji: '🎨',
+    status: 'upcoming',
+    order: 2,
+  },
+  {
+    slug: 'vuon-am-thanh-ky-dieu',
+    name: 'Vườn Âm Thanh Kỳ Diệu',
+    tag: 'Đồ chơi âm nhạc',
+    desc: 'Bộ nhạc cụ mini khơi dậy thính giác và cảm thụ nhịp điệu, cho bé làm quen với âm nhạc.',
+    color: '#FFB23E',
+    emoji: '🎵',
+    status: 'upcoming',
+    order: 3,
+  },
+]
+
+// Create-only: seeds the catalogue once (when empty).
+async function seedProducts() {
+  const count = await Product.countDocuments()
+  if (count === 0) {
+    await Product.insertMany(PRODUCT_SEED)
+    console.log(`✓ Đã tạo ${PRODUCT_SEED.length} sản phẩm mẫu.`)
+  } else {
+    console.log(`• Đã có ${count} sản phẩm — bỏ qua seed sản phẩm.`)
+  }
+}
+
 async function run() {
   await connectDB()
   try {
     await seedAdmin()
     await seedChatbot()
+    await seedProducts()
     console.log('Seed hoàn tất.')
   } finally {
     await disconnectDB()

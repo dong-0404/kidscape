@@ -10,8 +10,11 @@ RUN npm ci --omit=dev && npm cache clean --force
 # App source.
 COPY . .
 
-# Make the entrypoint executable (runs the create-only admin seed, then the server).
-RUN chmod +x docker-entrypoint.sh
+# Make the entrypoint executable (runs the create-only admin seed, then the server)
+# and ensure the uploads dir is owned by the non-root user so multer can write to
+# it (a fresh named volume inherits this ownership on first mount).
+RUN chmod +x docker-entrypoint.sh \
+ && mkdir -p /app/uploads && chown -R node:node /app/uploads
 
 ENV NODE_ENV=production \
     PORT=5000

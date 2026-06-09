@@ -4,7 +4,9 @@
 process.env.NODE_ENV = process.env.NODE_ENV || 'test'
 process.env.MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/kidscape_chat_test'
 process.env.JWT_SECRET = process.env.JWT_SECRET || 'test_secret_long_enough_for_tests_only_123'
-delete process.env.GEMINI_API_KEY
+// Force the chatbot "not configured" path. Setting '' (rather than delete) keeps the
+// var defined so dotenv.config() in env.js won't repopulate it from a real .env.
+process.env.GEMINI_API_KEY = ''
 
 const { connectDB, disconnectDB } = await import('../src/config/db.js')
 const Admin = (await import('../src/models/Admin.js')).default

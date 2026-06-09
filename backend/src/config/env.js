@@ -1,4 +1,5 @@
 import dotenv from 'dotenv'
+import path from 'path'
 
 dotenv.config()
 
@@ -60,6 +61,14 @@ export const config = {
     maxInput: num(process.env.CHAT_MAX_INPUT, 500),
     rateMax: num(process.env.CHAT_RATE_MAX, 20),
     rateWindowMin: num(process.env.CHAT_RATE_WINDOW_MIN, 5),
+  },
+
+  // Uploaded product images (multer → disk). `dir` is resolved from the process
+  // CWD (backend/ in dev, /app in Docker, where a volume persists it).
+  uploads: {
+    dir: process.env.UPLOADS_DIR || path.resolve('uploads'),
+    publicPath: '/uploads', // served at /api/uploads (see app.js)
+    maxBytes: num(process.env.UPLOAD_MAX_BYTES, 3 * 1024 * 1024), // 3MB
   },
 }
 
