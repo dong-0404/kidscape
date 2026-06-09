@@ -7,6 +7,10 @@ import productRoutes from './product.routes.js'
 import adminProductRoutes from './adminProduct.routes.js'
 import subscriberRoutes from './subscriber.routes.js'
 import adminSubscriberRoutes from './adminSubscriber.routes.js'
+import blogRoutes from './blog.routes.js'
+import adminBlogRoutes from './adminBlog.routes.js'
+import categoryRoutes from './category.routes.js'
+import adminCategoryRoutes from './adminCategory.routes.js'
 
 const router = Router()
 
@@ -31,5 +35,9 @@ router.use('/products', productRoutes)
 router.use('/admin/products', adminProductRoutes)
 router.use('/subscribers', subscriberRoutes)
 router.use('/admin/subscribers', adminSubscriberRoutes)
+router.use('/blogs', blogRoutes)
+router.use('/admin/blogs', adminBlogRoutes)
+router.use('/categories', categoryRoutes)
+router.use('/admin/categories', adminCategoryRoutes)
 
 export default router

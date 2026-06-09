@@ -8,7 +8,7 @@
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
     "seed": "node seed/seed.js",
-    "test": "node test/auth.e2e.mjs && node test/chat.e2e.mjs && node test/products.e2e.mjs"
+    "test": "node test/auth.e2e.mjs && node test/chat.e2e.mjs && node test/products.e2e.mjs && node test/blog.e2e.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.8.0",

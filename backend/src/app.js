@@ -49,6 +49,10 @@ export function createApp() {
       maxAge: '7d',
       fallthrough: false, // missing file → 404 instead of falling into the API 404
       index: false,
+      // These are public images embedded from the frontend origin (cross-origin in
+      // dev: :5173 → :5001). Override helmet's default same-origin CORP so the
+      // browser doesn't block them.
+      setHeaders: (res) => res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin'),
     })
   )
 

@@ -4,6 +4,8 @@ import Admin from '../src/models/Admin.js'
 import KnowledgeBase from '../src/models/KnowledgeBase.js'
 import ChatbotSuggestion from '../src/models/ChatbotSuggestion.js'
 import Product from '../src/models/Product.js'
+import Category from '../src/models/Category.js'
+import Blog from '../src/models/Blog.js'
 
 const EXAMPLE_PASSWORD = 'ChangeMe123!'
 
@@ -187,12 +189,85 @@ async function seedProducts() {
   }
 }
 
+// Blog categories from the brief.
+const CATEGORY_SEED = [
+  { name: 'Động vật quý hiếm', slug: 'dong-vat-quy-hiem', order: 1 },
+  { name: 'Giáo dục trẻ em', slug: 'giao-duc-tre-em', order: 2 },
+  { name: 'Bảo tồn thiên nhiên', slug: 'bao-ton-thien-nhien', order: 3 },
+  { name: 'Hoạt động KidScape', slug: 'hoat-dong-kidscape', order: 4 },
+]
+
+const BLOG_SEED = [
+  {
+    slug: 'kham-pha-nhung-nguoi-ban-sach-do',
+    title: 'Khám phá “Những Người Bạn Sách Đỏ” cùng bé',
+    excerpt:
+      'Hành trình làm quen với các loài động vật quý hiếm qua bộ sách đa giác quan của KidScape.',
+    content:
+      '<p>“Những Người Bạn Sách Đỏ” đưa bé đến gần hơn với thế giới động vật quý hiếm qua hình ảnh sống động, âm thanh vui nhộn và những chi tiết chạm thú vị.</p><h2>Vì sao chọn sách đa giác quan?</h2><p>Trẻ 3-6 tuổi học hỏi tốt nhất khi được <strong>nhìn — nghe — chạm</strong> cùng lúc. Mỗi trang sách là một cơ hội để bé khám phá và ghi nhớ tự nhiên.</p>',
+    category: 'dong-vat-quy-hiem',
+    tags: ['sách đỏ', 'động vật', 'đa giác quan'],
+    author: 'KidScape',
+    featured: true,
+    order: 1,
+    publishedAt: new Date('2026-05-20'),
+  },
+  {
+    slug: 'meo-dong-hanh-cung-be-khi-choi',
+    title: '5 mẹo đồng hành cùng bé khi chơi đồ chơi giáo dục',
+    excerpt: 'Những gợi ý nhỏ giúp ba mẹ biến giờ chơi thành giờ học đầy gắn kết.',
+    content:
+      '<p>Đồng hành cùng con khi chơi không chỉ giúp bé an toàn mà còn tăng sự gắn kết gia đình.</p><ul><li>Đặt câu hỏi mở để khơi gợi trí tò mò.</li><li>Khen ngợi nỗ lực thay vì kết quả.</li><li>Để bé dẫn dắt trò chơi.</li></ul>',
+    category: 'giao-duc-tre-em',
+    tags: ['nuôi dạy', 'mẹo hay'],
+    author: 'KidScape',
+    featured: true,
+    order: 2,
+    publishedAt: new Date('2026-05-28'),
+  },
+  {
+    slug: 'bao-ton-thien-nhien-bat-dau-tu-dieu-nho',
+    title: 'Bảo tồn thiên nhiên bắt đầu từ những điều nhỏ',
+    excerpt: 'Gieo cho bé tình yêu thiên nhiên qua các hoạt động đơn giản mỗi ngày.',
+    content:
+      '<p>Tình yêu thiên nhiên có thể được nuôi dưỡng từ rất sớm. KidScape tin rằng mỗi đứa trẻ đều có thể trở thành một người bạn của Trái Đất.</p>',
+    category: 'bao-ton-thien-nhien',
+    tags: ['bảo tồn', 'thiên nhiên'],
+    author: 'KidScape',
+    featured: false,
+    order: 3,
+    publishedAt: new Date('2026-06-02'),
+  },
+]
+
+async function seedCategories() {
+  const count = await Category.countDocuments()
+  if (count === 0) {
+    await Category.insertMany(CATEGORY_SEED)
+    console.log(`✓ Đã tạo ${CATEGORY_SEED.length} danh mục mẫu.`)
+  } else {
+    console.log(`• Đã có ${count} danh mục — bỏ qua seed.`)
+  }
+}
+
+async function seedBlogs() {
+  const count = await Blog.countDocuments()
+  if (count === 0) {
+    await Blog.insertMany(BLOG_SEED)
+    console.log(`✓ Đã tạo ${BLOG_SEED.length} bài viết mẫu.`)
+  } else {
+    console.log(`• Đã có ${count} bài viết — bỏ qua seed.`)
+  }
+}
+
 async function run() {
   await connectDB()
   try {
     await seedAdmin()
     await seedChatbot()
     await seedProducts()
+    await seedCategories()
+    await seedBlogs()
     console.log('Seed hoàn tất.')
   } finally {
     await disconnectDB()
