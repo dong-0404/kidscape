@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { navLinks } from '../data.js'
 
 export default function Header() {
@@ -26,19 +27,30 @@ export default function Header() {
           {/* The chatbot is reachable via the floating launcher, so it's omitted from the nav. */}
           {navLinks
             .filter((link) => !link.widget)
-            .map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                className="nav__link"
-                onClick={() => setOpen(false)}
-              >
-                {link.label}
-              </a>
-            ))}
-          <a href="#products" className="btn btn--primary nav__cta" onClick={() => setOpen(false)}>
+            .map((link) =>
+              link.to ? (
+                <Link
+                  key={link.label}
+                  to={link.to}
+                  className="nav__link"
+                  onClick={() => setOpen(false)}
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  className="nav__link"
+                  onClick={() => setOpen(false)}
+                >
+                  {link.label}
+                </a>
+              )
+            )}
+          <Link to="/products" className="btn btn--primary nav__cta" onClick={() => setOpen(false)}>
             Khám phá
-          </a>
+          </Link>
         </nav>
 
         <button

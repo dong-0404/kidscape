@@ -7,6 +7,7 @@ import { ChatWidgetProvider } from './components/chatbot/ChatWidgetContext.jsx'
 import './index.css'
 import './admin/admin.css'
 import './chatbot.css'
+import './products.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

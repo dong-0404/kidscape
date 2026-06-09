@@ -3,6 +3,16 @@ const BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:5001/api";
 const TOKEN_KEY = "kidscape_admin_token";
 
+// The API base URL (e.g. "http://localhost:5001/api" in dev, "/api" in prod).
+export const API_BASE_URL = BASE_URL;
+
+// Build a browser-usable URL for a stored media path ("/uploads/x.jpg").
+export function mediaUrl(p) {
+  if (!p) return null;
+  if (/^https?:\/\//.test(p)) return p;
+  return `${BASE_URL}${p}`;
+}
+
 export const tokenStore = {
   get: () => localStorage.getItem(TOKEN_KEY),
   set: (token) => localStorage.setItem(TOKEN_KEY, token),
@@ -29,7 +39,10 @@ export async function apiFetch(
 ) {
   const opts = { method, headers: { ...headers } };
 
-  if (body !== undefined) {
+  if (body instanceof FormData) {
+    // Let the browser set the multipart boundary Content-Type itself.
+    opts.body = body;
+  } else if (body !== undefined) {
     opts.headers["Content-Type"] = "application/json";
     opts.body = JSON.stringify(body);
   }

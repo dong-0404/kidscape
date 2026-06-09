@@ -1,13 +1,13 @@
 // Nội dung trang chủ KidScape — tách riêng để dễ chỉnh sửa
 
 export const navLinks = [
-  { label: 'Trang chủ', href: '#home' },
-  { label: 'Về chúng tôi', href: '#about' },
-  { label: 'Sản phẩm', href: '#products' },
+  { label: 'Trang chủ', href: '/#home' },
+  { label: 'Về chúng tôi', href: '/#about' },
+  { label: 'Sản phẩm', to: '/products' },
   { label: 'Chatbot', widget: true },
-  { label: 'Tin tức', href: '#news' },
-  { label: 'Đối tác', href: '#partners' },
-  { label: 'Liên hệ', href: '#contact' },
+  { label: 'Tin tức', href: '/#news' },
+  { label: 'Đối tác', href: '/#partners' },
+  { label: 'Liên hệ', href: '/#contact' },
 ]
 
 export const coreValues = [
@@ -61,27 +61,30 @@ export const whyReasons = [
   },
 ]
 
-export const products = [
+// Sản phẩm được quản lý ở backend (Product model) và đọc qua /api/products.
+// Dữ liệu mẫu ban đầu được seed ở backend/seed/seed.js.
+
+// Câu hỏi thường gặp ở trang sản phẩm.
+export const productFaqs = [
   {
-    name: 'Những Người Bạn Sách Đỏ',
-    tag: 'Bộ sách tương tác',
-    desc: 'Bộ sách đa giác quan với hình ảnh sống động, âm thanh vui nhộn và các chi tiết chạm — kể những câu chuyện về tình bạn cho bé 3-6 tuổi.',
-    color: '#FF6B6B',
-    emoji: '📕',
+    q: 'Sản phẩm phù hợp với độ tuổi nào?',
+    a: 'Các sản phẩm của KidScape được thiết kế dành riêng cho trẻ từ 3 đến 6 tuổi.',
   },
   {
-    name: 'Hộp Khám Phá Sắc Màu',
-    tag: 'Đồ chơi cảm giác',
-    desc: 'Khối ghép nhiều chất liệu giúp bé nhận biết màu sắc, hình khối và rèn luyện vận động tinh qua đôi tay.',
-    color: '#4ECDC4',
-    emoji: '🎨',
+    q: 'Đồ chơi của KidScape có an toàn cho bé không?',
+    a: 'An toàn của trẻ luôn được KidScape đặt lên hàng đầu: chất liệu phù hợp lứa tuổi, được lựa chọn kỹ lưỡng. Phụ huynh nên chơi cùng bé để trải nghiệm thêm trọn vẹn và an toàn.',
   },
   {
-    name: 'Vườn Âm Thanh Kỳ Diệu',
-    tag: 'Đồ chơi âm nhạc',
-    desc: 'Bộ nhạc cụ mini khơi dậy thính giác và cảm thụ nhịp điệu, cho bé bước đầu làm quen với âm nhạc.',
-    color: '#FFB23E',
-    emoji: '🎵',
+    q: 'Vì sao gọi là đồ chơi "đa giác quan"?',
+    a: 'Mỗi sản phẩm kết hợp nhìn — nghe — chạm — tương tác trong cùng một trải nghiệm, giúp bé học hỏi chủ động thay vì ghi nhớ thụ động.',
+  },
+  {
+    q: 'Bố mẹ có cần chơi cùng bé không?',
+    a: 'Rất nên! Đồng hành cùng bé khi chơi giúp tăng sự gắn kết và để bố mẹ cùng khám phá thế giới qua đôi mắt của con.',
+  },
+  {
+    q: 'Làm sao để mua hoặc nhận tư vấn?',
+    a: 'Bạn có thể nhắn cho trợ lý KidScape ngay trên trang, hoặc gửi email tới hello@kidscape.vn để được hỗ trợ.',
   },
 ]
 

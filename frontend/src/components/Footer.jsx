@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { footerInfo, navLinks } from '../data.js'
 import { useChatWidget } from './chatbot/ChatWidgetContext.jsx'
 
@@ -36,6 +37,8 @@ export default function Footer() {
                   <button type="button" className="footer__linkbtn" onClick={openChat}>
                     {l.label}
                   </button>
+                ) : l.to ? (
+                  <Link to={l.to}>{l.label}</Link>
                 ) : (
                   <a href={l.href}>{l.label}</a>
                 )}

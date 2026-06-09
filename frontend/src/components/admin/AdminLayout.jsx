@@ -4,16 +4,16 @@ import { useAuth } from '../../auth/AuthContext.jsx'
 // Active modules (real routes) + "coming soon" placeholders.
 const LINKS = [
   { to: '/admin', label: 'Tổng quan', icon: '📊', end: true },
+  { to: '/admin/products', label: 'Sản phẩm', icon: '🧸' },
+  { to: '/admin/subscribers', label: 'Email đăng ký', icon: '✉️' },
   { to: '/admin/chatbot/suggestions', label: 'Câu hỏi gợi ý', icon: '💬' },
   { to: '/admin/chatbot/kb', label: 'Tri thức (KB)', icon: '📚' },
 ]
 
 const SOON = [
   { icon: '📰', label: 'Tin tức' },
-  { icon: '🧸', label: 'Sản phẩm' },
   { icon: '🤝', label: 'Đối tác' },
   { icon: '👥', label: 'Đội ngũ' },
-  { icon: '✉️', label: 'Liên hệ' },
   { icon: '⚙️', label: 'Cài đặt' },
 ]
 

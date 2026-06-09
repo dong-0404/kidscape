@@ -1,6 +1,25 @@
-import { products } from '../data.js'
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import ProductCard from './products/ProductCard.jsx'
+import ComingSoonCard from './products/ComingSoonCard.jsx'
+import { getProducts } from '../api/products.js'
 
 export default function Products() {
+  const [products, setProducts] = useState([])
+
+  useEffect(() => {
+    let active = true
+    getProducts()
+      .then((list) => active && setProducts(list))
+      .catch(() => active && setProducts([]))
+    return () => {
+      active = false
+    }
+  }, [])
+
+  const available = products.filter((p) => p.status !== 'upcoming')
+  const upcoming = products.filter((p) => p.status === 'upcoming')
+
   return (
     <section className="section products" id="products">
       <div className="container">
@@ -13,21 +32,18 @@ export default function Products() {
         </div>
 
         <div className="products__grid">
-          {products.map((p) => (
-            <article className="product-card" key={p.name}>
-              <div className="product-card__media" style={{ '--accent': p.color }}>
-                <span className="product-card__emoji">{p.emoji}</span>
-                <span className="product-card__tag">{p.tag}</span>
-              </div>
-              <div className="product-card__body">
-                <h3 className="product-card__title">{p.name}</h3>
-                <p className="product-card__desc">{p.desc}</p>
-                <a href="#products" className="link-arrow" style={{ color: p.color }}>
-                  Xem chi tiết sản phẩm <span aria-hidden="true">→</span>
-                </a>
-              </div>
-            </article>
+          {available.map((p) => (
+            <ProductCard key={p._id} product={p} />
           ))}
+          {upcoming.map((p) => (
+            <ComingSoonCard key={p._id} product={p} />
+          ))}
+        </div>
+
+        <div className="products__more">
+          <Link to="/products" className="btn btn--primary btn--lg">
+            Xem tất cả sản phẩm
+          </Link>
         </div>
       </div>
     </section>

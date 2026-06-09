@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 export default function Hero() {
   return (
     <section className="hero" id="home">
@@ -14,7 +16,7 @@ export default function Hero() {
             khám phá thế giới xung quanh thông qua <strong>nhìn — nghe — chạm — tương tác</strong>.
           </p>
           <div className="hero__actions">
-            <a href="#products" className="btn btn--primary btn--lg">Khám phá sản phẩm</a>
+            <Link to="/products" className="btn btn--primary btn--lg">Khám phá sản phẩm</Link>
             <a href="#about" className="btn btn--ghost btn--lg">Tìm hiểu thêm</a>
           </div>
           <div className="hero__stats">

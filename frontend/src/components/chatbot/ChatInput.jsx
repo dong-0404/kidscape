@@ -15,7 +15,9 @@ export default function ChatInput({ onSend, onStop, isStreaming }) {
   }
 
   function handleKeyDown(e) {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    // Ignore Enter while an IME (e.g. Vietnamese telex) is still composing —
+    // otherwise the last syllable commits AFTER we clear the field and reappears.
+    if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing && e.keyCode !== 229) {
       e.preventDefault()
       submit()
     }

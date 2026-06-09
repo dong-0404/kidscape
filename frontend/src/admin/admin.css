@@ -552,3 +552,61 @@
     align-self: flex-end;
   }
 }
+
+/* ── Products + subscribers admin ────────────────────────────────────────── */
+.admin-page-bar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.admin-list__thumb {
+  flex: 0 0 auto;
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-size: 1.6rem;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--accent, #ffd6c2) 22%, #fff);
+}
+.admin-list__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.admin-image-preview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0;
+}
+.admin-image-preview img {
+  width: 84px;
+  height: 84px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+}
+.admin-highlight-row {
+  display: grid;
+  grid-template-columns: 60px 1fr 1.4fr auto;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.admin-highlight-row__icon {
+  text-align: center;
+}
+.admin-highlight-add {
+  margin-top: 4px;
+}
+@media (max-width: 600px) {
+  .admin-highlight-row {
+    grid-template-columns: 50px 1fr auto;
+  }
+  .admin-highlight-row input:nth-child(3) {
+    grid-column: 1 / -1;
+  }
+}
