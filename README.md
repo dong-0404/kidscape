@@ -46,5 +46,6 @@ npm run dev
 | Backend | Node.js, Express, Mongoose |
 | Database | MongoDB |
 | Auth | JWT + bcrypt (một cấp admin) |
+| Chatbot | Widget nổi (React) + Google Gemini (SSE streaming), grounding qua Knowledge Base do admin quản lý |
 | Triển khai | Docker, Coolify, GitHub Actions (CI/CD) |
 

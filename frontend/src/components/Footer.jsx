@@ -1,6 +1,9 @@
 import { footerInfo, navLinks } from '../data.js'
+import { useChatWidget } from './chatbot/ChatWidgetContext.jsx'
 
 export default function Footer() {
+  const { open: openChat } = useChatWidget()
+
   return (
     <footer className="footer">
       <div className="container footer__inner">
@@ -28,8 +31,14 @@ export default function Footer() {
           <h4 className="footer__heading">Điều hướng</h4>
           <ul className="footer__list">
             {navLinks.map((l) => (
-              <li key={l.href}>
-                <a href={l.href}>{l.label}</a>
+              <li key={l.label}>
+                {l.widget ? (
+                  <button type="button" className="footer__linkbtn" onClick={openChat}>
+                    {l.label}
+                  </button>
+                ) : (
+                  <a href={l.href}>{l.label}</a>
+                )}
               </li>
             ))}
           </ul>

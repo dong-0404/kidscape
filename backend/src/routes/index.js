@@ -1,6 +1,8 @@
 import { Router } from 'express'
 import mongoose from 'mongoose'
 import authRoutes from './auth.routes.js'
+import chatRoutes from './chat.routes.js'
+import adminChatRoutes from './adminChat.routes.js'
 
 const router = Router()
 
@@ -19,7 +21,7 @@ router.get('/health', (req, res) => {
 })
 
 router.use('/auth', authRoutes)
-
-// Public read API and /admin CRUD routers are mounted here in Phase 2–3.
+router.use('/chat', chatRoutes)
+router.use('/admin/chat', adminChatRoutes)
 
 export default router

@@ -21,4 +21,13 @@ export const loginLimiter = rateLimit({
   message: jsonMessage('Quá nhiều lần đăng nhập sai, vui lòng thử lại sau.'),
 })
 
-export default { apiLimiter, loginLimiter }
+// Limiter for the AI chat endpoint (per-IP cost / abuse protection).
+export const chatLimiter = rateLimit({
+  windowMs: config.chat.rateWindowMin * 60 * 1000,
+  max: config.chat.rateMax,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: jsonMessage('Bạn đang hỏi hơi nhanh đó! Chờ một chút rồi hỏi tiếp nhé.'),
+})
+
+export default { apiLimiter, loginLimiter, chatLimiter }

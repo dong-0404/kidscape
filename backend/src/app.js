@@ -24,7 +24,16 @@ export function createApp() {
       credentials: false, // Bearer-token auth — no cookies needed.
     })
   )
-  app.use(compression())
+  // Compress responses, but NEVER buffer Server-Sent Events (chatbot streaming)
+  // — compression would hold the stream and break the typing effect.
+  app.use(
+    compression({
+      filter: (req, res) => {
+        if (res.getHeader('Content-Type')?.toString().includes('text/event-stream')) return false
+        return compression.filter(req, res)
+      },
+    })
+  )
   app.use(express.json({ limit: '1mb' }))
   app.use(express.urlencoded({ extended: true, limit: '1mb' }))
   app.use(mongoSanitize())

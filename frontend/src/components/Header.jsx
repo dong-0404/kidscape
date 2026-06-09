@@ -23,16 +23,19 @@ export default function Header() {
         </a>
 
         <nav className={`nav ${open ? 'nav--open' : ''}`}>
-          {navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="nav__link"
-              onClick={() => setOpen(false)}
-            >
-              {link.label}
-            </a>
-          ))}
+          {/* The chatbot is reachable via the floating launcher, so it's omitted from the nav. */}
+          {navLinks
+            .filter((link) => !link.widget)
+            .map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                className="nav__link"
+                onClick={() => setOpen(false)}
+              >
+                {link.label}
+              </a>
+            ))}
           <a href="#products" className="btn btn--primary nav__cta" onClick={() => setOpen(false)}>
             Khám phá
           </a>

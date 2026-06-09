@@ -99,6 +99,7 @@ git push -u origin main
    - `MONGO_PASSWORD`, `SEED_ADMIN_PASSWORD` = mật khẩu mạnh (đặt **trước** lần deploy đầu)
    - `SEED_ADMIN_EMAIL` = email admin của bạn
    - `TRUST_PROXY=2`
+   - `GEMINI_API_KEY` = khóa Google Gemini cho chatbot (lấy ở <https://aistudio.google.com/apikey>). Bỏ trống nếu chưa dùng chatbot — site + auth vẫn chạy, `/api/chat/ask` trả 503, các chip gợi ý vẫn trả lời được.
 5. **Domains** → dịch vụ `frontend` → đặt domain `https://kidscape.your-domain.com`. Coolify (Traefik) tự cấp SSL Let's Encrypt khi DNS đã trỏ đúng. (Đây là cách gán domain — không cần biến `SERVICE_FQDN`.)
 6. Nhấn **Deploy**. Lần đầu sẽ build cả 3 image. Backend tự tạo admin (seed create-only) khi khởi động.
 

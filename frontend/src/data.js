@@ -4,7 +4,7 @@ export const navLinks = [
   { label: 'Trang chủ', href: '#home' },
   { label: 'Về chúng tôi', href: '#about' },
   { label: 'Sản phẩm', href: '#products' },
-  { label: 'Chatbot', href: '#chatbot' },
+  { label: 'Chatbot', widget: true },
   { label: 'Tin tức', href: '#news' },
   { label: 'Đối tác', href: '#partners' },
   { label: 'Liên hệ', href: '#contact' },

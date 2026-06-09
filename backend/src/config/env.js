@@ -40,6 +40,27 @@ export const config = {
     email: (process.env.SEED_ADMIN_EMAIL || 'admin@kidscape.vn').toLowerCase().trim(),
     password: process.env.SEED_ADMIN_PASSWORD || 'ChangeMe123!',
   },
+
+  // Google Gemini — powers the chatbot. Optional: if GEMINI_API_KEY is missing the
+  // API stays up and the chatbot endpoint returns 503 (auth/site keep working).
+  gemini: {
+    apiKey: process.env.GEMINI_API_KEY || '',
+    // Flash-Lite: free-tier friendly (15 RPM / 1.5K req/day), ideal for short grounded Q&A.
+    model: process.env.GEMINI_MODEL || 'gemini-3.1-flash-lite',
+    maxOutputTokens: num(process.env.GEMINI_MAX_OUTPUT_TOKENS, 512),
+    temperature: Number.isFinite(Number(process.env.GEMINI_TEMPERATURE))
+      ? Number(process.env.GEMINI_TEMPERATURE)
+      : 0.3,
+    // Cap on grounding text stuffed into systemInstruction (prevents prompt bloat / cost spikes).
+    maxContextChars: num(process.env.GEMINI_MAX_CONTEXT_CHARS, 24000),
+  },
+
+  // Chatbot input + rate limiting.
+  chat: {
+    maxInput: num(process.env.CHAT_MAX_INPUT, 500),
+    rateMax: num(process.env.CHAT_RATE_MAX, 20),
+    rateWindowMin: num(process.env.CHAT_RATE_WINDOW_MIN, 5),
+  },
 }
 
 // Fail-fast: never run production with insecure default secrets.
@@ -50,6 +71,10 @@ if (isProd) {
   }
   if (config.seedAdmin.password === 'ChangeMe123!') {
     console.warn('⚠ SEED_ADMIN_PASSWORD vẫn là giá trị mẫu — hãy đổi trước khi seed ở production.')
+  }
+  // Warn (don't throw) so the rest of the API still runs without the chatbot.
+  if (!config.gemini.apiKey) {
+    console.warn('⚠ GEMINI_API_KEY chưa đặt — chatbot sẽ trả 503 cho tới khi cấu hình khóa.')
   }
 }
 

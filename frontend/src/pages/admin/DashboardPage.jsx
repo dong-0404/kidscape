@@ -3,16 +3,6 @@ import { Link } from 'react-router-dom'
 import { useAuth } from '../../auth/AuthContext.jsx'
 import * as authApi from '../../api/auth.js'
 
-const NAV_ITEMS = [
-  { icon: '📊', label: 'Tổng quan', active: true },
-  { icon: '📰', label: 'Tin tức' },
-  { icon: '🧸', label: 'Sản phẩm' },
-  { icon: '🤝', label: 'Đối tác' },
-  { icon: '👥', label: 'Đội ngũ' },
-  { icon: '✉️', label: 'Liên hệ' },
-  { icon: '⚙️', label: 'Cài đặt' },
-]
-
 function formatDateTime(value) {
   if (!value) return '—'
   try {
@@ -22,8 +12,9 @@ function formatDateTime(value) {
   }
 }
 
+// Index content for /admin — rendered inside <AdminLayout/>'s <Outlet/>.
 export default function DashboardPage() {
-  const { admin, logout } = useAuth()
+  const { admin } = useAuth()
   const [health, setHealth] = useState(null)
   const [healthError, setHealthError] = useState(false)
 
@@ -42,124 +33,75 @@ export default function DashboardPage() {
   const dbConnected = health?.db === 'connected'
 
   return (
-    <div className="admin-shell">
-      <aside className="admin-sidebar">
-        <div className="admin-sidebar__brand">
-          <span className="logo__mark" aria-hidden="true">
-            <span className="logo__dot logo__dot--y" />
-            <span className="logo__dot logo__dot--t" />
+    <main className="admin-content">
+      <h1 className="admin-page-title">Tổng quan</h1>
+
+      {/* Stat cards */}
+      <section className="admin-grid admin-grid--stats">
+        <div className="admin-card admin-stat">
+          <span className="admin-stat__label">Trạng thái API</span>
+          <span className={`admin-badge ${apiOnline ? 'admin-badge--ok' : 'admin-badge--off'}`}>
+            {healthError ? 'Mất kết nối' : apiOnline ? 'Đang hoạt động' : 'Đang kiểm tra…'}
           </span>
-          <span className="logo__text">KidScape</span>
         </div>
+        <div className="admin-card admin-stat">
+          <span className="admin-stat__label">Cơ sở dữ liệu</span>
+          <span className={`admin-badge ${dbConnected ? 'admin-badge--ok' : 'admin-badge--off'}`}>
+            {health ? (dbConnected ? 'Đã kết nối' : health.db) : '—'}
+          </span>
+        </div>
+        <div className="admin-card admin-stat">
+          <span className="admin-stat__label">Vai trò</span>
+          <span className="admin-stat__value">Quản trị viên</span>
+        </div>
+        <div className="admin-card admin-stat">
+          <span className="admin-stat__label">Đăng nhập gần nhất</span>
+          <span className="admin-stat__value admin-stat__value--sm">
+            {formatDateTime(admin?.lastLoginAt)}
+          </span>
+        </div>
+      </section>
 
-        <nav className="admin-nav">
-          {NAV_ITEMS.map((item) => (
-            <button
-              key={item.label}
-              type="button"
-              className={`admin-nav__item${item.active ? ' is-active' : ''}`}
-              disabled={!item.active}
-              title={item.active ? item.label : 'Sắp có'}
-            >
-              <span className="admin-nav__icon" aria-hidden="true">
-                {item.icon}
-              </span>
-              <span>{item.label}</span>
-              {!item.active && <span className="admin-nav__soon">Sắp có</span>}
-            </button>
-          ))}
-        </nav>
-
-        <button type="button" className="admin-sidebar__logout" onClick={logout}>
-          <span aria-hidden="true">⏻</span> Đăng xuất
-        </button>
-      </aside>
-
-      <div className="admin-main">
-        <header className="admin-topbar">
-          <div>
-            <h1 className="admin-topbar__title">Tổng quan</h1>
-            <p className="admin-topbar__greet">Xin chào, {admin?.name || 'Quản trị viên'} 👋</p>
-          </div>
-          <div className="admin-topbar__user">
-            <div className="admin-avatar" aria-hidden="true">
-              {(admin?.name || 'A').charAt(0).toUpperCase()}
+      <div className="admin-grid admin-grid--two">
+        {/* Account info */}
+        <section className="admin-card">
+          <h2 className="admin-card__title">Thông tin tài khoản</h2>
+          <dl className="admin-info">
+            <div>
+              <dt>Họ tên</dt>
+              <dd>{admin?.name || '—'}</dd>
             </div>
-            <div className="admin-topbar__meta">
-              <strong>{admin?.name}</strong>
-              <span>{admin?.email}</span>
+            <div>
+              <dt>Email</dt>
+              <dd>{admin?.email || '—'}</dd>
             </div>
-          </div>
-        </header>
+            <div>
+              <dt>Trạng thái</dt>
+              <dd>
+                <span className="admin-badge admin-badge--ok">
+                  {admin?.isActive === false ? 'Đã khóa' : 'Hoạt động'}
+                </span>
+              </dd>
+            </div>
+          </dl>
+        </section>
 
-        <main className="admin-content">
-          {/* Stat cards */}
-          <section className="admin-grid admin-grid--stats">
-            <div className="admin-card admin-stat">
-              <span className="admin-stat__label">Trạng thái API</span>
-              <span className={`admin-badge ${apiOnline ? 'admin-badge--ok' : 'admin-badge--off'}`}>
-                {healthError ? 'Mất kết nối' : apiOnline ? 'Đang hoạt động' : 'Đang kiểm tra…'}
-              </span>
-            </div>
-            <div className="admin-card admin-stat">
-              <span className="admin-stat__label">Cơ sở dữ liệu</span>
-              <span className={`admin-badge ${dbConnected ? 'admin-badge--ok' : 'admin-badge--off'}`}>
-                {health ? (dbConnected ? 'Đã kết nối' : health.db) : '—'}
-              </span>
-            </div>
-            <div className="admin-card admin-stat">
-              <span className="admin-stat__label">Vai trò</span>
-              <span className="admin-stat__value">Quản trị viên</span>
-            </div>
-            <div className="admin-card admin-stat">
-              <span className="admin-stat__label">Đăng nhập gần nhất</span>
-              <span className="admin-stat__value admin-stat__value--sm">
-                {formatDateTime(admin?.lastLoginAt)}
-              </span>
-            </div>
-          </section>
-
-          <div className="admin-grid admin-grid--two">
-            {/* Account info */}
-            <section className="admin-card">
-              <h2 className="admin-card__title">Thông tin tài khoản</h2>
-              <dl className="admin-info">
-                <div>
-                  <dt>Họ tên</dt>
-                  <dd>{admin?.name || '—'}</dd>
-                </div>
-                <div>
-                  <dt>Email</dt>
-                  <dd>{admin?.email || '—'}</dd>
-                </div>
-                <div>
-                  <dt>Trạng thái</dt>
-                  <dd>
-                    <span className="admin-badge admin-badge--ok">
-                      {admin?.isActive === false ? 'Đã khóa' : 'Hoạt động'}
-                    </span>
-                  </dd>
-                </div>
-              </dl>
-            </section>
-
-            {/* Change password */}
-            <ChangePasswordCard />
-          </div>
-
-          <section className="admin-card admin-soon-card">
-            <h2 className="admin-card__title">Quản lý nội dung</h2>
-            <p className="admin-soon-card__text">
-              Các module quản lý (Tin tức, Sản phẩm, Đối tác, Đội ngũ, Liên hệ…) sẽ được bổ sung ở
-              giai đoạn tiếp theo.
-            </p>
-            <Link to="/" className="btn btn--ghost">
-              Xem trang chủ
-            </Link>
-          </section>
-        </main>
+        {/* Change password */}
+        <ChangePasswordCard />
       </div>
-    </div>
+
+      <section className="admin-card admin-soon-card">
+        <h2 className="admin-card__title">Quản lý nội dung</h2>
+        <p className="admin-soon-card__text">
+          Module Chatbot đã sẵn sàng — quản lý <Link to="/admin/chatbot/suggestions">câu hỏi gợi ý</Link> và{' '}
+          <Link to="/admin/chatbot/kb">kho tri thức</Link>. Các module khác (Tin tức, Sản phẩm, Đối
+          tác, Đội ngũ, Liên hệ…) sẽ được bổ sung ở giai đoạn tiếp theo.
+        </p>
+        <Link to="/" className="btn btn--ghost">
+          Xem trang chủ
+        </Link>
+      </section>
+    </main>
   )
 }
 
@@ -201,9 +143,7 @@ function ChangePasswordCard() {
     <section className="admin-card">
       <h2 className="admin-card__title">Đổi mật khẩu</h2>
       <form onSubmit={handleSubmit}>
-        {status && (
-          <div className={`admin-alert admin-alert--${status.type}`}>{status.message}</div>
-        )}
+        {status && <div className={`admin-alert admin-alert--${status.type}`}>{status.message}</div>}
         <label className="admin-field">
           <span>Mật khẩu hiện tại</span>
           <input
