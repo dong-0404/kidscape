@@ -610,3 +610,20 @@
     grid-column: 1 / -1;
   }
 }
+
+/* ── Blog WYSIWYG editor (Quill) ─────────────────────────────────────────── */
+.admin-editor .ql-container {
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  background: #fff;
+  font-family: inherit;
+  font-size: 15px;
+}
+.admin-editor .ql-toolbar {
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  background: var(--cream, #fff9f3);
+}
+.admin-editor .ql-editor {
+  min-height: 220px;
+}

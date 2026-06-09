@@ -4,10 +4,12 @@ import { BrowserRouter } from 'react-router-dom'
 import App from './App.jsx'
 import { AuthProvider } from './auth/AuthContext.jsx'
 import { ChatWidgetProvider } from './components/chatbot/ChatWidgetContext.jsx'
+import 'react-quill-new/dist/quill.snow.css'
 import './index.css'
 import './admin/admin.css'
 import './chatbot.css'
 import './products.css'
+import './blog.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

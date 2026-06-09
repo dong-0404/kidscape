@@ -5,13 +5,14 @@ import { useAuth } from '../../auth/AuthContext.jsx'
 const LINKS = [
   { to: '/admin', label: 'Tổng quan', icon: '📊', end: true },
   { to: '/admin/products', label: 'Sản phẩm', icon: '🧸' },
+  { to: '/admin/blogs', label: 'Tin tức', icon: '📰' },
+  { to: '/admin/categories', label: 'Danh mục', icon: '🏷️' },
   { to: '/admin/subscribers', label: 'Email đăng ký', icon: '✉️' },
   { to: '/admin/chatbot/suggestions', label: 'Câu hỏi gợi ý', icon: '💬' },
   { to: '/admin/chatbot/kb', label: 'Tri thức (KB)', icon: '📚' },
 ]
 
 const SOON = [
-  { icon: '📰', label: 'Tin tức' },
   { icon: '🤝', label: 'Đối tác' },
   { icon: '👥', label: 'Đội ngũ' },
   { icon: '⚙️', label: 'Cài đặt' },
