@@ -1,13 +1,14 @@
 // Nội dung trang chủ KidScape — tách riêng để dễ chỉnh sửa
 
+// Điều hướng chính — `hash` là id section trên trang chủ, `to` là route riêng.
 export const navLinks = [
-  { label: 'Trang chủ', href: '/#home' },
-  { label: 'Về chúng tôi', href: '/#about' },
+  { label: 'Trang chủ', to: '/', hash: 'home' },
   { label: 'Sản phẩm', to: '/products' },
-  { label: 'Chatbot', widget: true },
+  { label: 'Khám phá 10 loài', hash: 'kham-pha' },
+  { label: 'Hướng dẫn', hash: 'huong-dan' },
   { label: 'Tin tức', to: '/blog' },
-  { label: 'Đối tác', href: '/#partners' },
-  { label: 'Liên hệ', href: '/#contact' },
+  { label: 'Giới thiệu', hash: 'gioi-thieu' },
+  { label: 'Liên hệ', hash: 'lien-he' },
 ]
 
 export const coreValues = [
@@ -38,62 +39,50 @@ export const coreValues = [
   },
 ]
 
-export const whyReasons = [
-  {
-    icon: '👐',
-    title: 'Phát triển đa giác quan',
-    desc: 'Học hỏi thông qua chạm — quan sát — lắng nghe trong cùng một trải nghiệm.',
-  },
-  {
-    icon: '🌱',
-    title: 'Học qua trải nghiệm',
-    desc: 'Trẻ chủ động khám phá thay vì ghi nhớ thụ động, kiến thức được khắc sâu.',
-  },
-  {
-    icon: '🔍',
-    title: 'Kích thích trí tò mò',
-    desc: 'Khơi gợi sự hứng thú và khả năng khám phá thế giới xung quanh.',
-  },
-  {
-    icon: '📵',
-    title: 'Hạn chế thiết bị điện tử',
-    desc: 'Đưa trẻ rời màn hình, đến với hoạt động chơi thật, chạm thật.',
-  },
-]
-
 // Sản phẩm được quản lý ở backend (Product model) và đọc qua /api/products.
 // Dữ liệu mẫu ban đầu được seed ở backend/seed/seed.js.
 
-// Câu hỏi thường gặp ở trang sản phẩm.
-export const productFaqs = [
-  {
-    q: 'Sản phẩm phù hợp với độ tuổi nào?',
-    a: 'Các sản phẩm của KidScape được thiết kế dành riêng cho trẻ từ 3 đến 6 tuổi.',
-  },
-  {
-    q: 'Đồ chơi của KidScape có an toàn cho bé không?',
-    a: 'An toàn của trẻ luôn được KidScape đặt lên hàng đầu: chất liệu phù hợp lứa tuổi, được lựa chọn kỹ lưỡng. Phụ huynh nên chơi cùng bé để trải nghiệm thêm trọn vẹn và an toàn.',
-  },
-  {
-    q: 'Vì sao gọi là đồ chơi "đa giác quan"?',
-    a: 'Mỗi sản phẩm kết hợp nhìn — nghe — chạm — tương tác trong cùng một trải nghiệm, giúp bé học hỏi chủ động thay vì ghi nhớ thụ động.',
-  },
-  {
-    q: 'Bố mẹ có cần chơi cùng bé không?',
-    a: 'Rất nên! Đồng hành cùng bé khi chơi giúp tăng sự gắn kết và để bố mẹ cùng khám phá thế giới qua đôi mắt của con.',
-  },
-  {
-    q: 'Làm sao để mua hoặc nhận tư vấn?',
-    a: 'Bạn có thể nhắn cho trợ lý KidScape ngay trên trang, hoặc gửi email tới hello@kidscape.vn để được hỗ trợ.',
-  },
-]
-
+// LƯU Ý: số điện thoại / email / fanpage lấy từ file thiết kế — cần đối chiếu
+// với thông tin thật trước khi lên production.
 export const footerInfo = {
-  address: 'Tầng 5, Tòa nhà Sáng Tạo, 123 Đường Khám Phá, Quận 1, TP. Hồ Chí Minh',
-  email: 'hello@kidscape.vn',
+  tagline: 'Đồng hành cùng con khám phá thế giới tự nhiên',
+  phone: '0968 123 456',
+  email: 'hello@kidscape.com.vn',
+  facebook: 'facebook.com/KidScape05',
+  address: 'Hà Nội, Việt Nam',
   socials: [
-    { label: 'Facebook', short: 'f', href: '#' },
-    { label: 'TikTok', short: 'tik', href: '#' },
-    { label: 'Instagram', short: 'ig', href: '#' },
+    { label: 'Facebook', icon: 'facebook', href: 'https://facebook.com/KidScape05' },
+    { label: 'Instagram', icon: 'instagram', href: '#' },
+    { label: 'TikTok', icon: 'tiktok', href: '#' },
   ],
 }
+
+// 4 cột liên kết ở footer. `widget: true` mở trợ lý chat thay vì điều hướng.
+export const footerColumns = [
+  {
+    heading: 'Sản phẩm',
+    links: [
+      { label: 'Sa bàn KidScape', to: '/products' },
+      { label: 'Khám phá 10 loài', hash: 'kham-pha' },
+      { label: 'Phụ kiện & Sticker', to: '/products' },
+    ],
+  },
+  {
+    heading: 'Hỗ trợ',
+    links: [
+      { label: 'Hướng dẫn sử dụng', hash: 'huong-dan' },
+      { label: 'Bảo hành', hash: 'an-toan' },
+      { label: 'Đổi trả & hoàn tiền', hash: 'cam-ket' },
+      { label: 'Tư vấn cùng trợ lý', widget: true },
+    ],
+  },
+  {
+    heading: 'Về KidScape',
+    links: [
+      { label: 'Giới thiệu', hash: 'gioi-thieu' },
+      { label: 'Câu chuyện thương hiệu', hash: 'gioi-thieu' },
+      { label: 'Tin tức', to: '/blog' },
+      { label: 'Liên hệ', hash: 'lien-he' },
+    ],
+  },
+]

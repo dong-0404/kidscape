@@ -1,4 +1,7 @@
 import BlogCard from './BlogCard.jsx'
+import Reveal from '../../motion/Reveal.jsx'
+import Stagger from '../../motion/Stagger.jsx'
+import StaggerItem from '../../motion/StaggerItem.jsx'
 
 // Highlight up to 3 featured articles. Hidden when there are none.
 export default function FeaturedPosts({ posts, categoryName }) {
@@ -6,15 +9,17 @@ export default function FeaturedPosts({ posts, categoryName }) {
 
   return (
     <section className="blog-featured">
-      <div className="section__head section__head--left">
+      <Reveal className="section__head section__head--left">
         <span className="eyebrow">Nổi bật</span>
         <h2 className="section__title">Bài viết nổi bật</h2>
-      </div>
-      <div className="blogs__grid blog-featured__grid">
+      </Reveal>
+      <Stagger className="blogs__grid blog-featured__grid" gap={0.08}>
         {posts.slice(0, 3).map((b) => (
-          <BlogCard key={b._id} blog={b} categoryName={categoryName(b.category)} />
+          <StaggerItem key={b._id} className="grid-cell">
+            <BlogCard blog={b} categoryName={categoryName(b.category)} />
+          </StaggerItem>
         ))}
-      </div>
+      </Stagger>
     </section>
   )
 }

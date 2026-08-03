@@ -28,3 +28,8 @@ yarn-error.log*
 .idea/
 .DS_Store
 *.local
+
+# Ảnh thiết kế gốc (PSD/PNG export từ Figma) — nặng ~33MB.
+# Bản đã tối ưu cho web nằm ở frontend/public/assets/ và ĐƯỢC commit.
+frontend/Trangchu/
+frontend/SanPham/

@@ -1,7 +1,9 @@
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { AnimatePresence } from 'framer-motion'
+import PageTransition from './motion/PageTransition.jsx'
+import ScrollToTop from './motion/ScrollToTop.jsx'
 import HomePage from './pages/HomePage.jsx'
-import ProductsPage from './pages/ProductsPage.jsx'
-import ProductDetailPage from './pages/ProductDetailPage.jsx'
+import ProductPage from './pages/ProductPage.jsx'
 import BlogPage from './pages/BlogPage.jsx'
 import BlogDetailPage from './pages/BlogDetailPage.jsx'
 import LoginPage from './pages/admin/LoginPage.jsx'
@@ -23,31 +25,43 @@ export default function App() {
 
   return (
     <>
-      <Routes>
-        {/* Public website */}
-        <Route path="/" element={<HomePage />} />
-        <Route path="/products" element={<ProductsPage />} />
-        <Route path="/products/:slug" element={<ProductDetailPage />} />
-        <Route path="/blog" element={<BlogPage />} />
-        <Route path="/blog/:slug" element={<BlogDetailPage />} />
-
-        {/* Admin */}
-        <Route path="/admin/login" element={<LoginPage />} />
-        <Route element={<ProtectedRoute />}>
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<DashboardPage />} />
-            <Route path="products" element={<ProductsAdminPage />} />
-            <Route path="blogs" element={<BlogsAdminPage />} />
-            <Route path="categories" element={<CategoriesAdminPage />} />
-            <Route path="subscribers" element={<SubscribersPage />} />
-            <Route path="chatbot/suggestions" element={<SuggestionsPage />} />
-            <Route path="chatbot/kb" element={<KnowledgeBasePage />} />
+      <ScrollToTop />
+      {isAdmin ? (
+        // ADMIN: thế giới hình ảnh riêng — KHÔNG transition, KHÔNG chat widget.
+        <Routes>
+          <Route path="/admin/login" element={<LoginPage />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<DashboardPage />} />
+              <Route path="products" element={<ProductsAdminPage />} />
+              <Route path="blogs" element={<BlogsAdminPage />} />
+              <Route path="categories" element={<CategoriesAdminPage />} />
+              <Route path="subscribers" element={<SubscribersPage />} />
+              <Route path="chatbot/suggestions" element={<SuggestionsPage />} />
+              <Route path="chatbot/kb" element={<KnowledgeBasePage />} />
+            </Route>
           </Route>
-        </Route>
-
-        {/* Fallback */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      ) : (
+        // PUBLIC: crossfade opacity-only giữa các trang (giữ sticky header + fixed chat ổn định).
+        <AnimatePresence
+          mode="wait"
+          initial={false}
+          onExitComplete={() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' })}
+        >
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={<PageTransition><HomePage /></PageTransition>} />
+            {/* /products CHÍNH LÀ màn sản phẩm (bộ sa bàn chủ lực).
+                /products/:slug giữ lại để link cũ và sản phẩm khác từ API vẫn vào được. */}
+            <Route path="/products" element={<PageTransition><ProductPage /></PageTransition>} />
+            <Route path="/products/:slug" element={<PageTransition><ProductPage /></PageTransition>} />
+            <Route path="/blog" element={<PageTransition><BlogPage /></PageTransition>} />
+            <Route path="/blog/:slug" element={<PageTransition><BlogDetailPage /></PageTransition>} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </AnimatePresence>
+      )}
 
       {!isAdmin && <ChatWidget />}
     </>

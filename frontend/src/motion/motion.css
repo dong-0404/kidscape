@@ -1,0 +1,38 @@
+/* ============================================================
+   KidScape — Motion CSS (file CSS DUY NHẤT của hệ motion)
+   shimmer skeleton + dotted-accent overlay + guard reduced-motion
+   ============================================================ */
+
+.skeleton {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  background: var(--cream-2);
+}
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), transparent);
+  animation: ks-shimmer 1.3s ease-in-out infinite;
+}
+@keyframes ks-shimmer {
+  100% { transform: translateX(100%); }
+}
+
+/* Khi StaggerItem bọc một card trong CSS grid: cho wrapper "trong suốt" về layout
+   để card con vẫn stretch đầy ô grid (chiều cao đều nhau). Dùng class .grid-cell. */
+.grid-cell { display: flex; }
+.grid-cell > * { flex: 1; min-width: 0; }
+
+/* dotted-accent overlay — CHỈ dùng cho .blog-hero */
+.deco-dots {
+  background-image: radial-gradient(var(--line) 1px, transparent 1px);
+  background-size: 22px 22px;
+  opacity: 0.5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton::after { animation: none !important; }  /* nền tĩnh, không kẹt giữa frame */
+}

@@ -5,6 +5,11 @@ import Header from '../components/Header.jsx'
 import Footer from '../components/Footer.jsx'
 import { getBlogBySlug } from '../api/blogs.js'
 import { mediaUrl } from '../api/client.js'
+import Reveal from '../motion/Reveal.jsx'
+import Stagger from '../motion/Stagger.jsx'
+import StaggerItem from '../motion/StaggerItem.jsx'
+import { Skeleton } from '../motion/Skeleton.jsx'
+import { popIn, popToy } from '../motion/variants'
 
 function formatDate(value) {
   if (!value) return ''
@@ -22,7 +27,6 @@ export default function BlogDetailPage() {
 
   useEffect(() => {
     let active = true
-    window.scrollTo(0, 0)
     setBlog(null)
     setNotFound(false)
     getBlogBySlug(slug)
@@ -41,7 +45,18 @@ export default function BlogDetailPage() {
         <Header />
         <main className="blog-detail">
           <div className="container">
-            <p className="admin-muted">Đang tải bài viết…</p>
+            <nav className="breadcrumb" aria-hidden="true">
+              <Skeleton w={60} h={14} />
+              <Skeleton w={160} h={14} />
+            </nav>
+            <article className="blog-detail__article">
+              <Skeleton w="85%" h={36} />
+              <Skeleton w={200} h={14} style={{ marginTop: 14 }} />
+              <Skeleton w="100%" h={260} r={18} style={{ marginTop: 20 }} />
+              <Skeleton w="100%" h={14} style={{ marginTop: 22 }} />
+              <Skeleton w="95%" h={14} style={{ marginTop: 10 }} />
+              <Skeleton w="90%" h={14} style={{ marginTop: 10 }} />
+            </article>
           </div>
         </main>
         <Footer />
@@ -66,9 +81,9 @@ export default function BlogDetailPage() {
           </nav>
 
           <article className="blog-detail__article">
-            <header className="blog-detail__header">
-              <h1 className="blog-detail__title">{title}</h1>
-              <div className="blog-detail__meta">
+            <Stagger as="header" className="blog-detail__header" animateNow gap={0.08} delay={0.05}>
+              <StaggerItem as="h1" className="blog-detail__title">{title}</StaggerItem>
+              <StaggerItem as="div" className="blog-detail__meta">
                 <span>{author || 'KidScape'}</span>
                 {publishedAt && (
                   <>
@@ -76,31 +91,37 @@ export default function BlogDetailPage() {
                     <time dateTime={publishedAt}>{formatDate(publishedAt)}</time>
                   </>
                 )}
-              </div>
-            </header>
+              </StaggerItem>
+            </Stagger>
 
-            {img && <img className="blog-detail__hero" src={img} alt={title} />}
+            {img && (
+              <Reveal as="img" variants={popIn} className="blog-detail__hero" src={img} alt={title} />
+            )}
 
-            <div className="blog-content" dangerouslySetInnerHTML={{ __html: safeHtml }} />
+            {/* Nội dung HTML (DOMPurify) — chỉ MỘT wrapper fade-up bên ngoài */}
+            <Reveal
+              className="blog-content"
+              dangerouslySetInnerHTML={{ __html: safeHtml }}
+            />
 
             {tags.length > 0 && (
               <footer className="blog-detail__footer">
-                <div className="blog-tags">
+                <Stagger className="blog-tags" gap={0.05}>
                   {tags.map((t) => (
-                    <span className="blog-tag" key={t}>
+                    <StaggerItem as="span" variants={popToy} className="blog-tag" key={t}>
                       #{t}
-                    </span>
+                    </StaggerItem>
                   ))}
-                </div>
+                </Stagger>
               </footer>
             )}
           </article>
 
-          <div className="blog-detail__back">
+          <Reveal className="blog-detail__back">
             <Link to="/blog" className="link-arrow">
               <span aria-hidden="true">←</span> Tất cả bài viết
             </Link>
-          </div>
+          </Reveal>
         </div>
       </main>
       <Footer />

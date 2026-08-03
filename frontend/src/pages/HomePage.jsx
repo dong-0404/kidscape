@@ -1,27 +1,31 @@
 import Header from '../components/Header.jsx'
 import Hero from '../components/Hero.jsx'
-import About from '../components/About.jsx'
+import HowToPlay from '../components/home/HowToPlay.jsx'
+import AnimalShowcase from '../components/home/AnimalShowcase.jsx'
+import WhyChoose from '../components/home/WhyChoose.jsx'
+import SafetyRow from '../components/home/SafetyRow.jsx'
 import CoreValues from '../components/CoreValues.jsx'
-import WhyKidScape from '../components/WhyKidScape.jsx'
-import Products from '../components/Products.jsx'
 import LatestNews from '../components/blog/LatestNews.jsx'
-import FinalCTA from '../components/FinalCTA.jsx'
+import BuyCta from '../components/home/BuyCta.jsx'
+import TrustBar from '../components/home/TrustBar.jsx'
 import Footer from '../components/Footer.jsx'
 
 export default function HomePage() {
   return (
-    <>
+    <div className="home">
       <Header />
       <main>
         <Hero />
-        <About />
+        <HowToPlay />
+        <AnimalShowcase />
+        <WhyChoose />
+        <SafetyRow />
         <CoreValues />
-        <WhyKidScape />
-        <Products />
         <LatestNews />
-        <FinalCTA />
+        <BuyCta />
       </main>
+      <TrustBar />
       <Footer />
-    </>
+    </div>
   )
 }

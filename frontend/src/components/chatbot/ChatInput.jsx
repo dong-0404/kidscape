@@ -1,11 +1,24 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 const MAX_LEN = 500
 
 // Free-text input. Enter submits, Shift+Enter inserts a newline. While the bot
 // is streaming the send button becomes a "Dừng" (stop) button.
-export default function ChatInput({ onSend, onStop, isStreaming }) {
+export default function ChatInput({ onSend, onStop, isStreaming, draft, onDraftUsed }) {
   const [value, setValue] = useState('')
+  const fieldRef = useRef(null)
+
+  // Nội dung soạn sẵn từ nút "Đặt mua ngay" -> đổ vào ô nhập rồi trả con trỏ về cuối.
+  useEffect(() => {
+    if (!draft) return
+    setValue(draft)
+    onDraftUsed?.()
+    const el = fieldRef.current
+    if (el) {
+      el.focus()
+      requestAnimationFrame(() => el.setSelectionRange(draft.length, draft.length))
+    }
+  }, [draft, onDraftUsed])
 
   function submit() {
     const q = value.trim()
@@ -32,6 +45,7 @@ export default function ChatInput({ onSend, onStop, isStreaming }) {
       }}
     >
       <textarea
+        ref={fieldRef}
         className="chat-input__field"
         placeholder="Nhập câu hỏi của bạn…"
         value={value}

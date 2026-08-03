@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { motion, useReducedMotion } from 'framer-motion'
 import { mediaUrl } from '../../api/client.js'
 
 function formatDate(value) {
@@ -15,12 +16,20 @@ function formatDate(value) {
 export default function BlogCard({ blog, categoryName }) {
   const { slug, title, excerpt, imagePath, publishedAt } = blog
   const img = mediaUrl(imagePath)
+  const reduce = useReducedMotion()
 
+  // Card lift giữ ở CSS (.blog-card:hover). Framer chỉ lo media-zoom trên ẢNH THẬT.
   return (
     <Link to={`/blog/${slug}`} className="blog-card">
       <div className="blog-card__media">
         {img ? (
-          <img src={img} alt={title} loading="lazy" />
+          <motion.img
+            src={img}
+            alt={title}
+            loading="lazy"
+            whileHover={reduce ? undefined : { scale: 1.08 }}
+            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          />
         ) : (
           <span className="blog-card__icon" aria-hidden="true">
             📰

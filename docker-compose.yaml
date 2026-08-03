@@ -42,6 +42,10 @@ services:
       SEED_ADMIN_NAME: ${SEED_ADMIN_NAME:-Admin KidScape}
       SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL}
       SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD}
+      # Uploaded product images live here; the named volume persists them across deploys.
+      UPLOADS_DIR: /app/uploads
+    volumes:
+      - uploads-data:/app/uploads
     depends_on:
       mongo:
         condition: service_healthy
@@ -64,3 +68,4 @@ services:
 
 volumes:
   mongo-data:
+  uploads-data:

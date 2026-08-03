@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { AnimatePresence } from 'framer-motion'
 import Header from '../components/Header.jsx'
 import Footer from '../components/Footer.jsx'
 import BlogHero from '../components/blog/BlogHero.jsx'
@@ -7,6 +8,10 @@ import CategoryFilter from '../components/blog/CategoryFilter.jsx'
 import BlogCard from '../components/blog/BlogCard.jsx'
 import { getBlogs } from '../api/blogs.js'
 import { getCategories } from '../api/categories.js'
+import Reveal from '../motion/Reveal.jsx'
+import Stagger from '../motion/Stagger.jsx'
+import StaggerItem from '../motion/StaggerItem.jsx'
+import { SkeletonBlogCard } from '../motion/Skeleton.jsx'
 
 export default function BlogPage() {
   const [blogs, setBlogs] = useState(null) // null = loading
@@ -34,8 +39,11 @@ export default function BlogPage() {
     return (slug) => map[slug] || ''
   }, [categories])
 
+  const loading = blogs === null && !error
   const featured = (blogs || []).filter((b) => b.featured)
   const feed = (blogs || []).filter((b) => (selected ? b.category === selected : true))
+  // Lưới lớn (>8 card) hạ stagger để không tạo chuỗi giật.
+  const feedGap = feed.length > 8 ? 0.04 : 0.07
 
   return (
     <>
@@ -45,28 +53,39 @@ export default function BlogPage() {
 
         <section className="section">
           <div className="container">
-            {blogs === null && !error && <p className="admin-muted">Đang tải bài viết…</p>}
-            {error && <p className="admin-muted">Không tải được bài viết. Vui lòng thử lại sau.</p>}
+            {loading && (
+              <div className="blogs__grid">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <SkeletonBlogCard key={i} />
+                ))}
+              </div>
+            )}
+            {error && <p className="blog-state">Không tải được bài viết. Vui lòng thử lại sau.</p>}
 
             {blogs && !error && (
               <>
                 {selected === '' && <FeaturedPosts posts={featured} categoryName={categoryName} />}
 
-                <div className="section__head section__head--left">
+                <Reveal className="section__head section__head--left">
                   <span className="eyebrow">Tin tức</span>
                   <h2 className="section__title">Tất cả bài viết</h2>
-                </div>
+                </Reveal>
 
                 <CategoryFilter categories={categories} selected={selected} onSelect={setSelected} />
 
                 {feed.length === 0 ? (
-                  <p className="admin-muted">Chưa có bài viết nào trong mục này.</p>
+                  <p className="blog-state">Chưa có bài viết nào trong mục này.</p>
                 ) : (
-                  <div className="blogs__grid">
-                    {feed.map((b) => (
-                      <BlogCard key={b._id} blog={b} categoryName={categoryName(b.category)} />
-                    ))}
-                  </div>
+                  <AnimatePresence mode="wait">
+                    {/* key đổi theo filter -> grid re-stagger "gật đầu" với thao tác lọc */}
+                    <Stagger key={selected || 'all'} className="blogs__grid" gap={feedGap}>
+                      {feed.map((b) => (
+                        <StaggerItem key={b._id} className="grid-cell">
+                          <BlogCard blog={b} categoryName={categoryName(b.category)} />
+                        </StaggerItem>
+                      ))}
+                    </Stagger>
+                  </AnimatePresence>
                 )}
               </>
             )}

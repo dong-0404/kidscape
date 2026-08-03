@@ -9,7 +9,7 @@ const GREETING =
   'Xin chào! Mình là trợ lý của KidScape 🧸 Bạn muốn biết gì về KidScape, các bạn động vật hay sản phẩm của tụi mình nào?'
 
 export default function ChatWidget() {
-  const { isOpen, toggle, close } = useChatWidget()
+  const { isOpen, toggle, close, draft, clearDraft } = useChatWidget()
 
   const [messages, setMessages] = useState([])
   const [suggestions, setSuggestions] = useState([])
@@ -120,7 +120,13 @@ export default function ChatWidget() {
 
           <SuggestedQuestions suggestions={suggestions} onPick={handlePick} disabled={isStreaming} />
 
-          <ChatInput onSend={handleSend} onStop={stopStreaming} isStreaming={isStreaming} />
+          <ChatInput
+            onSend={handleSend}
+            onStop={stopStreaming}
+            isStreaming={isStreaming}
+            draft={draft}
+            onDraftUsed={clearDraft}
+          />
         </section>
       )}
     </>
