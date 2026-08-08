@@ -20,7 +20,14 @@ export default function AnimalShowcase() {
             {animals.map((a) => (
               <StaggerItem as="article" className="k-animal" key={a.slug}>
                 <div className="k-animal__media">
-                  <img src={a.img} alt={a.name} loading="lazy" width="340" height="300" />
+                  <img
+                    src={a.img}
+                    alt={a.name}
+                    loading="lazy"
+                    width={Math.round(300 * a.ratio)}
+                    height="300"
+                    style={{ '--s': a.scale }}
+                  />
                 </div>
                 <h3 className="k-animal__name">{a.name}</h3>
               </StaggerItem>

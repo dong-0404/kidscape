@@ -48,6 +48,9 @@
   --k-r-lg: 26px;
   --k-r-xl: 34px;
   --k-pill: 999px;
+
+  /* Nhịp dọc của section trên trang chủ — sửa một chỗ, cả trang theo. */
+  --k-section-y: clamp(28px, 3.4vw, 40px);
 }
 
 /* Nền trang chủ ngả xanh — các trang khác giữ nền kem cũ. */
@@ -344,7 +347,7 @@ body:has(.home) { background: var(--k-page); }
 }
 
 /* ============================================================ Khung chung */
-.k-section { padding: clamp(46px, 6vw, 68px) 0; }
+.k-section { padding: var(--k-section-y) 0; }
 .k-section--tint { background: linear-gradient(180deg, #fff, #f0f8fe); }
 .k-section--white { background: #fff; }
 
@@ -472,7 +475,7 @@ body:has(.home) { background: var(--k-page); }
 }
 
 /* ============================================================ 10 loài */
-.k-animals { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; }
+.k-animals { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; --k-animal-h: 160px; }
 
 .k-animal {
   padding: 8px 6px 4px;
@@ -481,10 +484,31 @@ body:has(.home) { background: var(--k-page); }
 }
 .k-animal:hover { transform: translateY(-5px); }
 
-.k-animal__media { display: grid; place-items: center; height: 142px; }
+/* Cao = min(--k-animal-h, 88% bề rộng ô) — khớp đúng chiều cao loài cao nhất
+   bên dưới, nên khung không dư khoảng trắng khi lưới hẹp lại. */
+.k-animal__media {
+  display: grid;
+  place-items: center;
+  height: auto;
+  aspect-ratio: 1 / 0.88;
+  max-height: var(--k-animal-h);
+  /* max-height chặn lại làm khung hẹp hơn ô -> phải tự căn giữa, nếu không
+     ảnh sẽ dồn trái lệch khỏi tên bên dưới. */
+  margin-inline: auto;
+  container-type: inline-size;
+}
+/* `--s` do JSX truyền vào (xem homeData.js): chiều cao riêng của từng loài để
+   mọi con có cùng diện tích. `height` + `object-fit: contain` là bắt buộc —
+   thiếu `height` thì attribute height của <img> bị max-width kẹp lệch tỉ lệ.
+   `88cqw`: loài rộng nhất (đồi mồi, 1.886) cần bề rộng 1.132× chiều cao, nên
+   giới hạn chiều cao theo bề rộng ô để lưới hẹp không letterbox riêng nó —
+   min() áp cho cả 10 loài nên diện tích vẫn đều nhau. */
 .k-animal__media img {
-  max-height: 142px;
+  height: calc(var(--k-animal-h) * var(--s, 1));
+  height: calc(min(var(--k-animal-h), 88cqw) * var(--s, 1));
   width: auto;
+  max-width: 100%;
+  object-fit: contain;
   transition: transform var(--dur-base, 0.22s) var(--ease-soft, ease);
   filter: drop-shadow(0 6px 8px rgba(20, 55, 94, 0.12));
 }
@@ -571,6 +595,7 @@ body:has(.home) { background: var(--k-page); }
   /* Desktop: 3 thẻ vừa khít như thiết kế. Hẹp hơn thì cuộn ngang + hiện mũi tên/chấm. */
   flex: 0 0 calc(33.333% - 10px);
   min-width: 0;
+  container: k-quote / inline-size;
   scroll-snap-align: start;
   display: flex;
   flex-direction: column;
@@ -588,6 +613,15 @@ body:has(.home) { background: var(--k-page); }
 .k-quote__stars { display: flex; gap: 2px; color: var(--k-yellow); }
 .k-quote__text { flex: 1; font-size: 0.88rem; color: var(--k-ink); line-height: 1.5; }
 .k-quote__who { display: flex; align-items: center; gap: 10px; }
+
+/* Lưới 3 thẻ ngang chỉ cho thẻ rộng ~145-179px: trừ padding + avatar thì tên
+   còn <105px, không đủ cho "Anh Hoàng Nam" (108.6px) nên luôn bị ngắt dòng.
+   Thẻ hẹp -> xếp avatar lên trên để tên dùng hết bề rộng và nằm 1 hàng.
+   Ngưỡng so với content box của thẻ: cần 108.6 (tên dài nhất) + 46 (avatar+gap)
+   = 155px mới đủ xếp ngang; lấy 200px cho dư khi tên dài hơn. */
+@container k-quote (max-width: 200px) {
+  .k-quote__who { flex-direction: column; align-items: flex-start; gap: 8px; }
+}
 .k-quote__avatar {
   flex: none;
   display: grid;
@@ -664,34 +698,69 @@ body:has(.home) { background: var(--k-page); }
 .k-buy__panel {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  /* 3 nhóm (tên / giá / nút) giãn đều: tên neo đỉnh, nút neo đáy, giá nằm giữa.
+     Khoảng dư rơi vào 2 khe giữa các nhóm chứ không đọng thành vùng trống ở
+     mép panel. Dư = 0 (từ ~1000px xuống) thì các khe co về mức tối thiểu
+     (margin-bottom của tên và padding-top của nút). */
+  justify-content: space-between;
   gap: 4px;
   padding: clamp(28px, 4vw, 48px);
   background: #fdf1f2;
 }
-.k-buy__list { color: var(--k-muted); font-size: 0.95rem; }
-.k-buy__list s { color: var(--k-muted); }
-.k-buy__label { margin-top: 8px; font-weight: 700; color: var(--k-red); }
+/* Tên sản phẩm — heading của section. Cỡ chữ bám sát con số giá (tỉ lệ ~1:1.05
+   ở mọi bề rộng): tên đủ lớn để dẫn mắt, giá vẫn nhỉnh hơn nên thứ bậc còn giữ. */
+.k-buy__name {
+  font-family: 'Baloo 2', sans-serif;
+  /* Hệ số đặt sao cho ở 1000px cỡ chữ vẫn bằng mức cũ (44.8px) rồi mới lớn dần
+     tới 54.4px ở 1440px. Panel từ ~1000px xuống đã kín chữ và .k-buy__box có
+     overflow:hidden, tăng cỡ ở dải đó sẽ cắt mất nút. */
+  font-size: clamp(2rem, 1.44rem + 2.18vw, 3.4rem);
+  font-weight: 800;
+  color: var(--k-green);
+  line-height: 1.15;
+  margin-bottom: 14px;
+  text-wrap: balance;
+}
+/* `display: block` để "Sách Đỏ" luôn xuống dòng riêng, không phụ thuộc bề rộng. */
+.k-buy__name-accent { display: block; color: var(--k-red); }
+.k-buy__pricing { display: flex; flex-direction: column; gap: 4px; }
+.k-buy__label { font-weight: 700; color: var(--k-muted); }
 .k-buy__price {
   font-family: 'Baloo 2', sans-serif;
-  font-size: clamp(2.2rem, 1.4rem + 3vw, 3.2rem);
+  font-size: clamp(2.1rem, 1.55rem + 2.3vw, 2.9rem);
   font-weight: 800;
   color: var(--k-red);
   line-height: 1.05;
 }
 .k-buy__price sup { font-size: 0.42em; vertical-align: super; margin-left: 2px; }
 .k-buy__note { color: var(--k-muted); font-size: 0.92rem; }
-.k-buy__actions { display: flex; flex-direction: column; gap: 12px; margin-top: 22px; }
+/* `padding-top` = khe tối thiểu với khối giá khi panel không còn dư (mobile).
+   Không dùng margin-top vì `space-between` cần khe tự do để giãn. */
+.k-buy__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 22px;
+}
 .k-buy__actions > span { display: block; }
 
 /* ============================================================ Dải cam kết */
 .k-trust { background: #fff; padding: 22px 0; border-top: 1px solid var(--k-line); }
 .k-trust__row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
-.k-trust__item { display: flex; align-items: center; gap: 12px; }
-.k-trust__item + .k-trust__item { border-left: 1px solid var(--k-line); padding-left: 18px; }
+/* Ô chia đều 4 phần nhưng nội dung dài ngắn khác nhau -> căn giữa để khoảng
+   trắng chia đều hai bên, thay vì dồn trái làm dải trông so le. Padding cân
+   hai bên (9px) giữ nguyên tổng 18px như cũ nên chữ không bị ngắt thêm dòng. */
+.k-trust__item { display: flex; align-items: center; justify-content: center; gap: 12px; padding-inline: 9px; }
+.k-trust__item + .k-trust__item { border-left: 1px solid var(--k-line); }
 .k-trust__item img { flex: none; width: 46px; height: auto; }
+/* Không để thừa hưởng line-height 1.65 của body — hai dòng ngắn bị giãn quá xa.
+   1.35 đủ chỗ cho dấu tiếng Việt xếp tầng (ể, ữ, ạ) mà không bị cắt. */
+.k-trust__item p { line-height: 1.35; }
 .k-trust__item strong { display: block; font-size: 0.95rem; color: var(--k-ink); }
-.k-trust__item span { font-size: 0.88rem; color: var(--k-muted); }
+/* `display: block` là điểm mấu chốt: để inline thì dòng của span bị strut của
+   <p> (line-height tính trên font 16px của body) kéo cao, mọi line-height khai
+   báo cho span đều vô hiệu. Thành block thì nó tự quyết chiều cao dòng. */
+.k-trust__item span { display: block; font-size: 0.88rem; color: var(--k-muted); }
 
 /* ============================================================ Footer */
 .k-footer { position: relative; background: #0b62be; color: #d7e9fb; padding-top: 74px; }
@@ -751,7 +820,9 @@ body:has(.home) { background: var(--k-page); }
    Hoà các section cũ (Giới thiệu / Giá trị / Sản phẩm / Tin tức)
    vào tông xanh mới khi chúng nằm trong trang chủ.
    ============================================================ */
-.home .section { padding: clamp(46px, 6vw, 68px) 0; }
+.home .section { padding: var(--k-section-y) 0; }
+/* `.section__head` cũ để chừa 52px — nhiều hơn `.k-head`, gây lệch nhịp. */
+.home .section__head { margin-bottom: clamp(28px, 4vw, 42px); }
 .home .about,
 .home .why { background: linear-gradient(180deg, #fff, #f0f8fe); }
 .home .section__title { color: var(--k-blue-800); }
@@ -841,7 +912,10 @@ body:has(.home) { background: var(--k-page); }
   .k-buy__box { grid-template-columns: 1fr; max-width: 520px; margin-inline: auto; }
 
   .k-trust__row { grid-template-columns: 1fr 1fr; }
-  .k-trust__item:nth-child(odd) { border-left: 0; padding-left: 0; }
+  /* 2 cột: ô hẹp lại, bỏ padding để chữ đủ chỗ như trước — vẫn cân hai bên
+     vì căn giữa tự chia đều phần trắng còn lại. */
+  .k-trust__item { padding-inline: 0; }
+  .k-trust__item:nth-child(odd) { border-left: 0; }
   .k-quote { flex-basis: calc(50% - 7px); }
   .k-quotes__nav--prev { left: -6px; }
   .k-quotes__nav--next { right: -6px; }
@@ -859,9 +933,7 @@ body:has(.home) { background: var(--k-page); }
   }
   .k-chip { width: calc(50% - 6px); min-height: 104px; }
   .k-hero__bubble { font-size: 0.8rem; padding: 9px 13px; }
-  .k-animals { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-  .k-animal__media { height: 92px; }
-  .k-animal__media img { max-height: 92px; }
+  .k-animals { grid-template-columns: repeat(2, 1fr); gap: 12px; --k-animal-h: 104px; }
   .k-safety { grid-template-columns: 1fr; }
   .k-quote { flex-basis: 88%; }
   .k-footer__inner { grid-template-columns: 1fr 1fr; }
@@ -870,7 +942,7 @@ body:has(.home) { background: var(--k-page); }
 
 @media (max-width: 420px) {
   .k-trust__row { grid-template-columns: 1fr; }
-  .k-trust__item { border-left: 0 !important; padding-left: 0 !important; }
+  .k-trust__item { border-left: 0 !important; }
   .k-footer__inner { grid-template-columns: 1fr; }
 }
 
@@ -1002,9 +1074,12 @@ body:has(.home) { background: var(--k-page); }
 .k-trust--inline .k-trust__row { gap: 8px; }
 .k-trust--inline .k-trust__item { gap: 8px; }
 .k-trust--inline .k-trust__item img { width: 30px; }
-.k-trust--inline .k-trust__item strong { font-size: 0.78rem; line-height: 1.3; }
-.k-trust--inline .k-trust__item span { font-size: 0.72rem; line-height: 1.3; }
-.k-trust--inline .k-trust__item + .k-trust__item { padding-left: 8px; }
+/* line-height thừa hưởng 1.35 từ .k-trust__item p — 1.3 ở đây cho ra 14.98px,
+   thấp hơn 15px mà dấu tiếng Việt cần, nên bỏ để dùng chung một nguồn. */
+.k-trust--inline .k-trust__item strong { font-size: 0.78rem; }
+.k-trust--inline .k-trust__item span { font-size: 0.72rem; }
+/* Bản inline chật hơn: 4px mỗi bên = tổng 8px như cũ, đủ hở khỏi vạch chia. */
+.k-trust--inline .k-trust__item { padding-inline: 4px; }
 
 /* ---------------------------------------------- cột mua hàng */
 .pbuy__title {
@@ -1015,12 +1090,11 @@ body:has(.home) { background: var(--k-page); }
   letter-spacing: -0.005em;
 }
 .pbuy__title span { display: block; }
-.pbuy__title span { font-size: clamp(1.15rem, 0.85rem + 0.95vw, 1.5rem); }
+.pbuy__title span { font-size: clamp(1.3rem, 0.95rem + 1.15vw, 1.75rem); }
 .pbuy__title-1 { color: var(--k-blue-900); }
-.pbuy__title-2 { color: var(--k-red); }
-.pbuy__title-3 { color: var(--k-green); }
-
-.pbuy__tagline { margin-top: 10px; color: var(--k-ink-2); font-weight: 600; font-size: 0.85rem; }
+/* Dòng 2-3 = tên sản phẩm: xanh lá + đỏ, khớp .k-buy__name ở trang chủ. */
+.pbuy__title-2 { color: var(--k-green); }
+.pbuy__title-3 { color: var(--k-red); }
 
 .pbuy__price { display: flex; align-items: baseline; flex-wrap: wrap; gap: 10px; margin: 18px 0 16px; }
 .pbuy__price strong {
@@ -1031,15 +1105,6 @@ body:has(.home) { background: var(--k-page); }
   line-height: 1;
 }
 .pbuy__price strong sup { font-size: 0.45em; vertical-align: super; }
-.pbuy__price s { color: var(--k-muted); font-size: 1.05rem; }
-.pbuy__off {
-  padding: 4px 12px;
-  border-radius: var(--k-pill);
-  background: var(--k-red);
-  color: #fff;
-  font-size: 0.85rem;
-  font-weight: 700;
-}
 
 .pbuy__specs {
   display: grid;
@@ -1271,7 +1336,7 @@ body:has(.home) { background: var(--k-page); }
   .pgal__thumb { width: 84px; flex: none; }
   .pgal__more { display: none; }
   .k-trust--inline .k-trust__row { grid-template-columns: 1fr 1fr; }
-  .k-trust--inline .k-trust__item:nth-child(odd) { border-left: 0; padding-left: 0; }
+  .k-trust--inline .k-trust__item:nth-child(odd) { border-left: 0; }
   .psoon__grid { grid-template-columns: repeat(2, 1fr); }
 }
 

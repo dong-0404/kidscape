@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { CartIcon, MinusIcon, PlusIcon } from '../home/Icons.jsx'
 import { useChatWidget } from '../chatbot/ChatWidgetContext.jsx'
-import { heading, offer, specs, formatVnd, discountPercent } from '../../productData.js'
+import { heading, offer, specs, formatVnd } from '../../productData.js'
 import Stagger from '../../motion/Stagger.jsx'
 import StaggerItem from '../../motion/StaggerItem.jsx'
 import { fadeUp } from '../../motion/variants'
@@ -17,7 +17,8 @@ export default function ProductBuyPanel({ product }) {
   const reduce = useReducedMotion()
   const lift = reduce ? {} : { whileHover: { y: -2 }, whileTap: { scale: 0.98 } }
 
-  const name = product?.name || `${heading.line1} — ${heading.line2}`
+  // Dự phòng khi API chưa trả về: ghép dòng 2-3 của tiêu đề = tên sản phẩm.
+  const name = product?.name || `${heading.line2} ${heading.line3}`
   const step = (d) => setQty((q) => Math.min(MAX_QTY, Math.max(1, q + d)))
 
   return (
@@ -28,17 +29,11 @@ export default function ProductBuyPanel({ product }) {
         <span className="pbuy__title-3">{heading.line3}</span>
       </StaggerItem>
 
-      <StaggerItem as="p" variants={fadeUp} className="pbuy__tagline">
-        {product?.tag || heading.tagline}
-      </StaggerItem>
-
       <StaggerItem variants={fadeUp} className="pbuy__price">
         <strong>
           {formatVnd(offer.price)}
           <sup>đ</sup>
         </strong>
-        <s>{formatVnd(offer.listPrice)}đ</s>
-        <span className="pbuy__off">-{discountPercent}%</span>
       </StaggerItem>
 
       <StaggerItem variants={fadeUp} as="ul" className="pbuy__specs">

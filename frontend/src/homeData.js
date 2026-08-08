@@ -39,18 +39,32 @@ export const playSteps = [
 ]
 
 // --- 10 loài động vật quý hiếm -------------------------------
-export const animals = [
-  { slug: 'bao-gam', name: 'Báo gấm', habitat: 'Rừng thường xanh' },
-  { slug: 'sao-la', name: 'Sao la', habitat: 'Rừng Trường Sơn' },
-  { slug: 'son-duong', name: 'Sơn dương', habitat: 'Núi đá vôi' },
-  { slug: 'cao-do', name: 'Cáo đỏ', habitat: 'Rừng và đồng cỏ' },
-  { slug: 'gau-ngua', name: 'Gấu ngựa', habitat: 'Rừng núi cao' },
-  { slug: 'vooc-mong-trang', name: 'Voọc mông trắng', habitat: 'Núi đá vôi' },
-  { slug: 'doi-moi', name: 'Đồi mồi', habitat: 'Rạn san hô' },
-  { slug: 'ca-heo-hong', name: 'Cá heo hồng', habitat: 'Vùng cửa sông' },
-  { slug: 'ca-voi-xanh', name: 'Cá voi xanh', habitat: 'Đại dương khơi' },
-  { slug: 'seu-dau-do', name: 'Sếu đầu đỏ', habitat: 'Đồng cỏ ngập nước' },
-].map((a) => ({ ...a, img: `${IMG}/animal-${a.slug}.webp` }))
+// `ratio` = rộng/cao của vùng ảnh, đo từ alpha bounding box của từng file .webp.
+// Cần nó để chuẩn hoá kích thước theo DIỆN TÍCH: nếu chỉ ép cùng chiều cao thì
+// con dài (đồi mồi, cá voi) chiếm diện tích gấp đôi con cao gầy (sếu) và trông
+// to hơn hẳn. Khi thay asset thì đo lại tỉ lệ này.
+const animalList = [
+  { slug: 'bao-gam', name: 'Báo gấm', habitat: 'Rừng thường xanh', ratio: 1.182 },
+  { slug: 'sao-la', name: 'Sao la', habitat: 'Rừng Trường Sơn', ratio: 0.966 },
+  { slug: 'son-duong', name: 'Sơn dương', habitat: 'Núi đá vôi', ratio: 0.96 },
+  { slug: 'cao-do', name: 'Cáo đỏ', habitat: 'Rừng và đồng cỏ', ratio: 1.173 },
+  { slug: 'gau-ngua', name: 'Gấu ngựa', habitat: 'Rừng núi cao', ratio: 0.839 },
+  { slug: 'vooc-mong-trang', name: 'Voọc mông trắng', habitat: 'Núi đá vôi', ratio: 0.794 },
+  { slug: 'doi-moi', name: 'Đồi mồi', habitat: 'Rạn san hô', ratio: 1.886 },
+  { slug: 'ca-heo-hong', name: 'Cá heo hồng', habitat: 'Vùng cửa sông', ratio: 1.064 },
+  { slug: 'ca-voi-xanh', name: 'Cá voi xanh', habitat: 'Đại dương khơi', ratio: 1.728 },
+  { slug: 'seu-dau-do', name: 'Sếu đầu đỏ', habitat: 'Đồng cỏ ngập nước', ratio: 0.679 },
+]
+
+// Cùng diện tích cho mọi loài: h = √(A/r). Lấy con hẹp nhất làm mốc scale = 1
+// (cao đầy khung), các con còn lại nhỏ lại theo đúng tỉ lệ căn bậc hai.
+const narrowest = Math.min(...animalList.map((a) => a.ratio))
+
+export const animals = animalList.map((a) => ({
+  ...a,
+  img: `${IMG}/animal-${a.slug}.webp`,
+  scale: Number(Math.sqrt(narrowest / a.ratio).toFixed(3)),
+}))
 
 // --- Vì sao ba mẹ chọn KidScape ------------------------------
 export const whyChoose = [
@@ -115,8 +129,10 @@ export const testimonials = [
 // --- Khối đặt mua --------------------------------------------
 // TODO: Product model chưa có trường giá — số liệu dưới đây lấy từ file thiết kế.
 export const offer = {
-  listPrice: '1.490.000đ',
-  salePrice: '1.190.000',
+  // Tên hiển thị 2 dòng: dòng đầu xanh, "Sách Đỏ" xuống dòng và tô đỏ.
+  name: 'Những người bạn',
+  nameAccent: 'Sách Đỏ',
+  listPrice: '1.200.000',
   currency: 'đ',
   note: 'Miễn phí giao hàng toàn quốc',
 }

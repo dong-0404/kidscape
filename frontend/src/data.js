@@ -7,7 +7,7 @@ export const navLinks = [
   { label: 'Khám phá 10 loài', hash: 'kham-pha' },
   { label: 'Hướng dẫn', hash: 'huong-dan' },
   { label: 'Tin tức', to: '/blog' },
-  { label: 'Giới thiệu', hash: 'gioi-thieu' },
+  { label: 'Giới thiệu', hash: 'vi-sao' },
   { label: 'Liên hệ', hash: 'lien-he' },
 ]
 
@@ -42,8 +42,8 @@ export const coreValues = [
 // Sản phẩm được quản lý ở backend (Product model) và đọc qua /api/products.
 // Dữ liệu mẫu ban đầu được seed ở backend/seed/seed.js.
 
-// LƯU Ý: số điện thoại / email / fanpage lấy từ file thiết kế — cần đối chiếu
-// với thông tin thật trước khi lên production.
+// LƯU Ý: số điện thoại / email / địa chỉ vẫn lấy từ file thiết kế — cần đối
+// chiếu với thông tin thật trước khi lên production. Các link social đã xác nhận.
 export const footerInfo = {
   tagline: 'Đồng hành cùng con khám phá thế giới tự nhiên',
   phone: '0968 123 456',
@@ -51,9 +51,9 @@ export const footerInfo = {
   facebook: 'facebook.com/KidScape05',
   address: 'Hà Nội, Việt Nam',
   socials: [
-    { label: 'Facebook', icon: 'facebook', href: 'https://facebook.com/KidScape05' },
-    { label: 'Instagram', icon: 'instagram', href: '#' },
-    { label: 'TikTok', icon: 'tiktok', href: '#' },
+    { label: 'Facebook', icon: 'facebook', href: 'https://www.facebook.com/KidScape05' },
+    { label: 'Instagram', icon: 'instagram', href: 'https://www.instagram.com/kidscape05_official' },
+    { label: 'TikTok', icon: 'tiktok', href: 'https://www.tiktok.com/@kidscape05' },
   ],
 }
 
@@ -79,8 +79,8 @@ export const footerColumns = [
   {
     heading: 'Về KidScape',
     links: [
-      { label: 'Giới thiệu', hash: 'gioi-thieu' },
-      { label: 'Câu chuyện thương hiệu', hash: 'gioi-thieu' },
+      { label: 'Giới thiệu', hash: 'vi-sao' },
+      { label: 'Câu chuyện thương hiệu', hash: 'vi-sao' },
       { label: 'Tin tức', to: '/blog' },
       { label: 'Liên hệ', hash: 'lien-he' },
     ],

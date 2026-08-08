@@ -27,15 +27,20 @@ export default function BuyCta() {
           </div>
 
           <div className="k-buy__panel">
-            <p className="k-buy__list">
-              Giá niêm yết: <s>{offer.listPrice}</s>
-            </p>
-            <p className="k-buy__label">Giá ưu đãi</p>
-            <p className="k-buy__price">
-              {offer.salePrice}
-              <sup>{offer.currency}</sup>
-            </p>
-            <p className="k-buy__note">{offer.note}</p>
+            <h2 className="k-buy__name">
+              {offer.name} <span className="k-buy__name-accent">{offer.nameAccent}</span>
+            </h2>
+
+            {/* Nhãn + giá + ghi chú là một nhóm: panel chỉ có 3 con (tên / giá /
+                nút) để `space-between` giãn đều ba khối thay vì từng dòng lẻ. */}
+            <div className="k-buy__pricing">
+              <p className="k-buy__label">Giá niêm yết</p>
+              <p className="k-buy__price">
+                {offer.listPrice}
+                <sup>{offer.currency}</sup>
+              </p>
+              <p className="k-buy__note">{offer.note}</p>
+            </div>
 
             <div className="k-buy__actions">
               <motion.span {...lift}>

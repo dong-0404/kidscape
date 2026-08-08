@@ -16,7 +16,7 @@ import { popIn } from '../motion/variants'
 // Màn sản phẩm. Vào thẳng ở /products (bộ sa bàn chủ lực); /products/:slug
 // dùng cho các sản phẩm khác đến từ API.
 // Thư viện ảnh / giá / thông số lấy từ productData.js vì Product model chưa có
-// các trường này; tên & tagline ưu tiên dữ liệu API khi có.
+// các trường này; tên sản phẩm ưu tiên dữ liệu API khi có.
 export default function ProductPage() {
   const { slug } = useParams()
   const activeSlug = slug || FLAGSHIP_SLUG
@@ -34,7 +34,8 @@ export default function ProductPage() {
     }
   }, [activeSlug])
 
-  const crumb = product?.name || `${heading.line1} - 10 loài động vật`
+  // Dự phòng lấy từ tiêu đề thay vì chuỗi cứng, để không lệch khi đổi tên sản phẩm.
+  const crumb = product?.name || `${heading.line2} ${heading.line3}`
 
   return (
     <div className="home">

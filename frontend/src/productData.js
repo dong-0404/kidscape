@@ -27,18 +27,17 @@ export const gallery = [
   { src: `${IMG}/gallery-5.webp`, thumb: `${IMG}/gallery-5-thumb.webp`, alt: 'Poster hành trình giải cứu muôn loài' },
 ]
 
-// Tiêu đề 3 dòng, mỗi dòng một màu như thiết kế.
+// Tiêu đề 3 dòng, mỗi dòng một màu. Dòng 2-3 là tên sản phẩm, dùng đúng cặp
+// màu xanh lá / đỏ như khối đặt mua ở trang chủ (.k-buy__name).
 export const heading = {
   line1: 'Bộ đồ chơi KidScape',
-  line2: '10 loài động vật quý hiếm',
-  line3: 'Việt Nam',
-  tagline: 'Học qua chơi – Khám phá thiên nhiên – Yêu Việt Nam',
+  line2: 'Những người bạn',
+  line3: 'Sách Đỏ',
 }
 
 // TODO: chuyển sang trường giá của Product model khi backend bổ sung.
 export const offer = {
-  price: 1190000,
-  listPrice: 1490000,
+  price: 1200000,
 }
 
 export const specs = [
@@ -57,5 +56,3 @@ export const comingSoon = [
 ]
 
 export const formatVnd = (n) => n.toLocaleString('vi-VN')
-
-export const discountPercent = Math.round((1 - offer.price / offer.listPrice) * 100)
